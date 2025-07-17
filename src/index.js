@@ -6,6 +6,8 @@ import { renderProjectList } from './ui/project-ui';
 import { loadFromStorage } from './app/storage';
 import { getAllProjects } from './app/project';
 
+import { showNewProjectForm } from './ui/form-ui';
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
     // // Initialize the DOM
@@ -30,4 +32,9 @@ function setupNavEvents() {
         console.log('New project button clicked');
     });
 }
+
+document.getElementById('new-project-btn').addEventListener('click', () => {
+    console.log('New project button clicked');
+    showNewProjectForm();
+});
 

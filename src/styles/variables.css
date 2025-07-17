@@ -1,0 +1,52 @@
+:root {
+    /* Color Variables */
+    --color-brown: #5C4B51;
+    --color-green: #8CBEB2;
+    --color-limesicle: #F2EBBF;
+    --color-orange: #F3B562;
+    --color-red: #F06060;
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-gray-light: #e0e0e0;
+    --color-gray-dark: #4a4a4a;
+    --color-background: var(--color-limesicle);
+    --color-surface: #ffffff;
+    --color-border: var(--color-gray-light);
+
+    /* Font Variables */
+    --font-family-primary: 'Raleway', sans-serif;
+    --font-family-secondary: 'Karla', sans-serif;
+    --font-size-xl: 36px;
+    --font-size-l: 30px;
+    --font-size-m: 24px;
+    --font-size-s: 16px;
+    --font-size-xs: 14px;
+    --font-weight-bold: 700;
+    --font-weight-normal: 400;
+    --font-weight-light: 300;
+    --line-height-base: 1.5;
+    --letter-spacing-wide: 0.05em;
+    --letter-spacing-tight: -0.01em;
+
+    /* Margins, Paddings Variables */
+    --spacing-l: 32px;
+    --spacing-m: 24px;
+    --spacing-s: 16px;
+    --spacing-xs: 8px;
+    
+    /* Z-Index Layers */
+    --z-index-header: 1000;
+    --z-index-overlay: 2000;
+    --z-index-modal: 3000;
+    --z-index-tooltip: 4000;
+
+    /* Interaction / States */
+    --opacity-disabled: 0.5;
+    --transition-fast: all 0.2s ease-in-out;
+    --transition-slow: all 0.5s ease-in-out;
+    --hover-brightness: 1.1;
+
+    /* Miscellaneous Variables */
+    --border-radius: 8px;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}

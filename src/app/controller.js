@@ -1,4 +1,5 @@
 import { loadProjects, saveProjects } from './storage';
+import { createProject } from './project';
 
 let projects = [];
 
@@ -12,9 +13,9 @@ export function getAllProjects() {
     return projects;
 }
 
-export function addProject(project) {
-    console.log('Adding new project:', project);
-    projects.push(project);
+export function addProject({ title, description }) {
+    const newProject = createProject({ title, description });
+    projects.push(newProject);
     saveProjects(projects);
 }
 
