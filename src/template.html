@@ -3,9 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
     <title>Not Todo List</title>
 </head>
 <body>
-    
+    <header>
+        <h1>!Todo List</h1>
+    </header>
+    <div id="app">
+        <div id="sidebar">
+            <nav>
+                <button id="inbox-btn">
+                    <span class="material-symbols-outlined">
+                        inbox
+                    </span>
+                    <span class="inbox-label">Inbox</span>
+                </button>
+                <div class="project-nav">
+                    <button id="new-project-btn">
+                        <span class="material-symbols-outlined">
+                            create_new_folder
+                        </span>
+                        New Project
+                    </button>
+                    <ul id="project-list">
+                        <!-- Project items dynamically inserted here -->
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div id="main">
+            <!-- Todos and forms will be rendered here -->
+        </div>
+    </div>
+    <footer>
+    </footer>
 </body>
 </html>
