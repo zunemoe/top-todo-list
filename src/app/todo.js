@@ -3,7 +3,7 @@ export function createTodo({
     description = '',
     dueDate = null,
     priority = 'medium',
-    asignee = '',
+    assignee = '',
     checklist = [],
     completed = false,
     projectId = null,
@@ -16,7 +16,7 @@ export function createTodo({
         description,
         dueDate,
         priority,
-        asignee,
+        assignee,
         checklist,
         completed,
         projectId,
@@ -43,10 +43,10 @@ export function removeChecklistItem(todo, itemIndex) {
 }
 
 export function toggleChecklistItem(todo, itemId) {
-    const updatedChecklist = todo.checklist.map((item, index) => {
-        item.id === itemId ? { ...item, completed: !item.completed } : item;
-    });
-    return updateTodo(todo, { checklist: updatedChecklist }, { updatedAt: new Date().toISOString() });
+    const updatedChecklist = todo.checklist.map((item) =>
+        item.id === itemId ? { ...item, completed: !item.completed } : item
+    );
+    return updateTodo(todo, { checklist: updatedChecklist });
 }
 
 // Utility functions

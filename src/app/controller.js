@@ -47,3 +47,31 @@ export function saveProjectTodos(projectId, todos) {
     console.log(`Saving todos for project ID: ${projectId}`);
     saveTodos(projectId, todos);
 }
+
+export function addTodoToProject(projectId, todo) {
+    console.log(`Adding todo to project ID: ${projectId}`);
+    const project = findProjectById(projectId);
+    if (!project) return;
+    project.todos.push(todo);
+    saveProjectTodos(projectId, project.todos);
+}
+
+export function deleteTodoFromProject(projectId, todoId) {
+    console.log(`Deleting todo with ID: ${todoId} from project ID: ${projectId}`);
+    const project = findProjectById(projectId);
+    if (!project) return;
+    project.todos = project.todos.filter(todo => todo.id !== todoId);
+    saveProjectTodos(projectId, project.todos);
+}
+
+export function toggleTodoCompleteById(projectId, todoId) {
+    console.log(`Toggling completion for todo ID: ${todoId} in project ID: ${projectId}`);
+    const project = findProjectById(projectId);
+    if (!project) return;
+    const todo = project.todos.find(todo => todo.id === todoId);
+    if (todo) {
+        todo.completed = !todo.completed;
+        saveProjectTodos(projectId, project.todos);
+    }
+}
+

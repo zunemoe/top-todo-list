@@ -1,5 +1,10 @@
 import { loadAllTodos, loadProjectTodos, saveProjectTodos } from '../app/controller'; 
 
+
+export function renderTodoList(todos) {
+    
+}
+
 export function renderInbox() {
     console.log('Rendering inbox');
     const todos = loadAllTodos();
