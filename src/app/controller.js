@@ -1,4 +1,4 @@
-import { loadProjects, saveProjects } from './storage';
+import { loadProjects, saveProjects, loadTodos, saveTodos } from './storage';
 import { createProject } from './project';
 
 let projects = [];
@@ -28,4 +28,22 @@ export function deleteProject(projectId) {
 export function findProjectById(projectId) {
     console.log('Finding project by ID:', projectId);
     return projects.find(project => project.id === projectId);
+}
+
+export function loadAllTodos() {
+    console.log('Loading all todos for all projects');
+    return projects.map(project => ({
+        ...project,
+        todos: loadTodos(project.id),
+    }));
+}
+
+export function loadProjectTodos(projectId) {
+    console.log(`Loading todos for project ID: ${projectId}`);
+    return loadTodos(projectId);
+}
+
+export function saveProjectTodos(projectId, todos) {
+    console.log(`Saving todos for project ID: ${projectId}`);
+    saveTodos(projectId, todos);
 }

@@ -19,3 +19,25 @@ export function saveProjects(projects) {
         console.error('Error saving projects:', error);
     }
 }
+
+export function loadTodos(projectId) {
+    console.log(`Loading todos for project ${projectId} from storage`);
+    try {
+        const key = `todos_${projectId}`;
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : [];
+    } catch (error) {
+        console.error(`Error loading todos for project ${projectId}:`, error);
+        return [];
+    }
+}
+
+export function saveTodos(projectId, todos) {
+    console.log(`Saving todos for project ${projectId} to storage`);
+    try {
+        const key = `todos_${projectId}`;
+        localStorage.setItem(key, JSON.stringify(todos));
+    } catch (error) {   
+        console.error(`Error saving todos for project ${projectId}:`, error);
+    }
+}

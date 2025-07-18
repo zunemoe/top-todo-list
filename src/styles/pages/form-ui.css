@@ -1,0 +1,145 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-index-modal);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+    background-color: (--color-surface);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-m);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-family: var(--font-family-primary);
+    color: var(--color-brown);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: var(--font-size-m);
+    cursor: pointer;
+    color: var(--color-gray-dark);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius);
+    transition: var(--transition-fast);
+}
+
+.close-btn:hover {
+    background-color: var(--color-gray-light);
+}
+
+.modal-body {
+    padding: var(--spacing-m);;
+}
+
+.modal-body label {
+    display: block;
+    margin-bottom: var(--spacing-s);
+    font-family: var(--font-family-secondary);
+    color: var(--color-brown);
+}
+
+.modal-body input,
+.modal-body textarea {
+    width: 100%;
+    padding: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    font-family: var(--font-family-secondary);
+    box-sizing: border-box;
+}
+
+.modal-body textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--spacing-m);
+    gap: var(--spacing-xs);
+    border: 1px solid var(--color-border);
+}
+
+.modal-footer button {
+    padding: var(--spacing-xs) var(--spacing-s);
+    border-radius: var(--border-radius);
+    font-family: var(--font-family-secondary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.cancel-btn {
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-gray-dark);
+}
+
+.cancel-btn:hover {
+    background-color: var(--color-gray-light);
+}
+
+button[type="submit"] {
+    background-color: var(--color-green);
+    color: var(--color-white);
+    border: none;
+}
+
+button[type="submit"]:hover {
+    filter: brightness(var(--hover-brightness));
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

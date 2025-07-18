@@ -1,11 +1,11 @@
 import { getAllProjects } from '../app/controller';
 
 export function renderProjectList(projects = getAllProjects()) {
-    const listContainer = document.querySelector('.project-list');
+    const listContainer = document.querySelector('#project-list');
     if (!listContainer) return;
 
     listContainer.innerHTML = ''; // Clear existing content
-
+    console.log('Rendering project list with projects:', projects);
     projects.forEach((project) => {
         const li = document.createElement('li');
         li.classList.add('project-item');
