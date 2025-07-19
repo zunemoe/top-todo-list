@@ -1,0 +1,29 @@
+header {
+    background-color: var(--color-green);
+    font-family: var(--font-family-primary);
+}
+
+header h1 {
+    font-size: var(--font-size-l);
+    color: var(--color-white);
+}
+
+#hamburger-menu {
+    color: var(--color-white);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#hamburger-menu:hover {
+    filter: brightness(var(--hover-brightness));
+}
+
+.icon-fade {
+    transition: opacity 0.2s ease;
+    opacity: 1;
+}
+
+.icon-fade.hide {
+    opacity: 0;
+}

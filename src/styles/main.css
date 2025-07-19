@@ -5,10 +5,14 @@
 
 @import './layout.css';
 
-@import './components/icons.css';
+@import './components/header.css';
+@import './components/footer.css';
+@import './components/sidebar.css';
 
 @import './pages/form-ui.css';
 @import './pages/project-ui.css';
 @import './pages/todo-ui.css';
+
+@import './components/icons.css';
 
 @import './responsive.css';

@@ -1,0 +1,49 @@
+#sidebar {
+    transition: max-height 0.5s ease-in-out;
+    background-color: var(--color-gray-light);    
+    box-shadow: var(--box-shadow);
+    padding: var(--spacing-s);
+    font-family: var(--font-family-primary);
+}
+
+#sidebar.active {
+    max-height: 100dvh;    
+}
+
+.sidebar-section {
+    margin-bottom: var(--spacing-m);
+}
+
+#sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+#sidebar nav ul li button,
+#new-project-btn {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    padding: var(--spacing-xs) 0 var(--spacing-xs) var(--spacing-s);
+    color: var(--color-gray-dark);
+    border-radius: var(--border-radius);
+}
+
+#sidebar nav ul li button:hover,
+#new-project-btn:hover {
+    background-color: var(--color-orange);
+}
+
+.sidebar-section h3 {
+    font-size: var(--font-size-m);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-brown);
+}
+
+.sidebar-section .material-symbols-outlined {
+    margin-right: var(--spacing-xs);
+}
