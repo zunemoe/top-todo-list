@@ -8,9 +8,11 @@ import { getAllProjects } from './app/project';
 import { initController } from './app/controller';
 
 import { showNewProjectForm } from './ui/form-ui';
+import { setupSidebarToggle } from './ui/sidebar';
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
+    setupSidebarToggle();
     // Initialize the DOM
     //  initDOM();
 
@@ -37,4 +39,3 @@ function setupNavEvents() {
         showNewProjectForm();
     });
 }
-
