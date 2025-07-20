@@ -145,19 +145,25 @@ function handleProjectEdit(projectItem) {
     function saveChanges() {
         const newTitle = projectInput.value.trim();
         if (newTitle === '') {
-            alert('Project title cannot be empty');
+            showInputError(projectInput);
             return;
         } else {
             console.log(`Saving project title: ${newTitle}`);
+            clearInputError(projectInput);
             // Update project title in the DOM and controller
             const result = updateProject(projectId, { title: newTitle });
-            if (result.success) projectInput.value = newTitle;                
-            exitEditMode();
+            if (result.success) {
+                projectInput.value = newTitle;                
+                exitEditMode();
+            } else {
+                showInputError(projectInput);
+            }            
         }
     }
 
     function cancelChanges() {
         projectInput.value = originalTitle; // Reset to original title
+        clearInputError(projectInput);
         exitEditMode();
     }
 
@@ -245,7 +251,7 @@ function handleNewProject() {
     function saveNewProject() {
         const title = projectInput.value.trim();
         if (title === '') {
-            alert('Project title cannot be empty');
+            showInputError(projectInput);
             projectInput.focus();
             return;
         }
@@ -255,9 +261,7 @@ function handleNewProject() {
             console.log(`New project added: ${title}`);
             updateNewProjectUI(result.data);
         } else {
-            alert(result.message || 'Failed to add project');
-            projectInput.focus(); // Keep focus on input if save fails
-            return;
+            showInputError(projectInput);                        
         }
     }
 
@@ -298,4 +302,25 @@ function handleNewProject() {
     projectInput.addEventListener('keydown', handleKeydown);
     saveButton.addEventListener('click', saveNewProject);
     cancelButton.addEventListener('click', cancelNewProject);
+}
+
+function showInputError(inputElement) {
+    inputElement.classList.add('error');
+    inputElement.classList.add('shake');
+    inputElement.focus();
+
+    setTimeout(() => {     
+        inputElement.classList.remove('shake');
+    }, 500);
+
+    const clearOnInput = () => {
+        clearInputError(inputElement);
+        inputElement.removeEventListener('input', clearOnInput);
+    }
+    inputElement.addEventListener('input', clearOnInput);
+}
+
+function clearInputError(inputElement) {
+    inputElement.classList.remove('error');
+    inputElement.classList.remove('shake');
 }
