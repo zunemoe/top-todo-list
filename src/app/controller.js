@@ -5,7 +5,10 @@ let projects = [];
 
 export function initController() {
     console.log('Controller initialized');
-    projects = loadProjects() || [];
+    projects = loadProjects();
+    if (!projects || projects.length === 0) {
+        projects = generateDummyProjects();
+    }
 }
 
 export function getAllProjects() {
@@ -19,10 +22,28 @@ export function addProject({ title, description }) {
     saveProjects(projects);
 }
 
+function generateDummyProjects() {
+    console.log('Generating dummy projects');
+    const projectTitles = ['Personal', 'Work', 'Groceries', 'Reading List'];
+    const dummyProjects = projectTitles.map(title => createProject({ title }));
+
+    saveProjects(dummyProjects);
+    return dummyProjects;
+}
+
 export function deleteProject(projectId) {
-    console.log('Deleting project with ID:', projectId);
-    projects = projects.filter(project => project.id !== projectId);
-    saveProjects(projects);
+    try {
+        const initialLength = projects.length;
+        projects = projects.filter(project => project.id !== projectId);
+
+        if (projects.length === initialLength) return { success: false, message: 'Project not found' };
+        saveProjects(projects);
+        console.log(`Project with ID ${projectId} deleted successfully`);
+        return { success: true, message: 'Project deleted successfully' };
+    } catch (error) {
+        console.error('Error deleting project:', error);
+        return { success: false, message: 'Failed to delete project' };
+    }
 }
 
 export function findProjectById(projectId) {

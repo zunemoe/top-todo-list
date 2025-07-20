@@ -4,6 +4,7 @@ export function loadProjects() {
     console.log('Loading projects from storage');
     try {
         const data = localStorage.getItem(PROJECTS_KEY);
+        console.log('Projects loaded:', data);
         return data ? JSON.parse(data) : [];
     } catch (error) {
         console.error('Error loading projects:', error);

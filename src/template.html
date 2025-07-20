@@ -22,25 +22,27 @@
     </header>
     <div id="app">
         <div id="sidebar">
-            <nav>
-                <ul class="sidebar-section">
-                    <li><button data-nav="inbox"><span class="material-symbols-outlined">inbox</span>Inbox</button></li>
-                    <li><button data-nav="today"><span class="material-symbols-outlined">today</span>Today</button></li>
-                    <li><button data-nav="week"><span class="material-symbols-outlined">calendar_month</span>This Week</button></li>
-                </ul>
-                <div class="sidebar-section">
-                    <h3>Projects</h3>
-                    <ul id="project-list">
-                        <!-- Project items dynamically inserted here -->
+            <div class="sidebar-inner">
+                <nav>
+                    <ul class="sidebar-section">
+                        <li><button class="sidebar-static-btn" data-id="inbox"><span class="material-symbols-outlined">inbox</span>Inbox</button></li>
+                        <li><button class="sidebar-static-btn" data-id="today"><span class="material-symbols-outlined">today</span>Today</button></li>
+                        <li><button class="sidebar-static-btn" data-id="week"><span class="material-symbols-outlined">calendar_month</span>This Week</button></li>
                     </ul>
-                    <button id="new-project-btn">
-                        <span class="material-symbols-outlined">
-                            create_new_folder
-                        </span>
-                        New Project
-                    </button>
-                </div>
-            </nav>
+                    <div class="sidebar-section">
+                        <h3>Projects</h3>
+                        <ul id="project-list">
+                            <!-- Project items dynamically inserted here -->
+                        </ul>
+                        <button id="new-project-btn">
+                            <span class="material-symbols-outlined">
+                                create_new_folder
+                            </span>
+                            New Project
+                        </button>
+                    </div>
+                </nav>
+            </div>
         </div>
         <div id="main">
             <!-- Todos and forms will be rendered here -->

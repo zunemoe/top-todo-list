@@ -15,9 +15,9 @@ export function renderProjectList(projects = getAllProjects()) {
         btn.textContent = project.title;
         btn.setAttribute('data-id', project.id);
 
-        btn.addEventListener('click', () => {
-            console.log(`Project clicked: ${project.title}`);
-        });
+        // btn.addEventListener('click', () => {
+        //     console.log(`Project clicked: ${project.title}`);
+        // });
 
         li.appendChild(btn);
         listContainer.appendChild(li);

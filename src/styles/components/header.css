@@ -1,6 +1,12 @@
 header {
     background-color: var(--color-green);
     font-family: var(--font-family-primary);
+    box-shadow: var(--box-shadow);
+    transition: box-shadow var(--transition-fast);
+}
+
+header.no-shadow {
+    box-shadow: none;
 }
 
 header h1 {
