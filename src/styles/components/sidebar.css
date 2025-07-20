@@ -153,3 +153,13 @@
 .edit-actions button .material-symbols-outlined {
     margin: 0;
 }
+
+.project-item-content.active {
+    background-color: var(--color-green);
+    border-left: 3px solid var(--color-brown);
+}
+
+.sidebar-static-btn.active {
+    background-color: var(--color-green);
+    border-left: 3px solid var(--color-brown);
+}

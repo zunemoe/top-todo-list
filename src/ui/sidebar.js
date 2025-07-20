@@ -77,18 +77,31 @@ export function setupNavEvents() {
         // Handle project navigation (div or input clicks)
         const projectElement = event.target.closest('.project-item-content[data-id], .project-input[data-id]');
         if (projectElement) {
+            // Skip if it's a new project (no data-id or in editing mode)
+            if (projectElement.closest('.project-item-content').classList.contains('editing')) {
+                return;
+            }
+
             const projectId = projectElement.dataset.id || projectElement.closest('.project-item-content').dataset.id;
             console.log(`Project element clicked with ID: ${projectId}`);
+            
+            // Set active state for this project
+            setActiveProject(projectElement.closest('.project-item-content'));
 
             const main = document.getElementById('main');
             main.innerHTML = `<h2>${projectId}</h2><p>Content for ${projectId} project.</p>`;
             return;
         }
         
+        // Handle static navigation buttons (Today, This Week, etc.)
         const navBtn = event.target.closest('button[data-id]');
         if (navBtn) {
             const projectName = navBtn.dataset.id;
             console.log(`Navigation button clicked for: ${projectName}`);
+
+            // Set active state for this nav button
+            setActiveNavButton(navBtn);
+
             const main = document.getElementById('main');
             main.innerHTML = `<h2>${projectName}</h2><p>Content for ${projectName}.</p>`;
             return;
@@ -323,4 +336,29 @@ function showInputError(inputElement) {
 function clearInputError(inputElement) {
     inputElement.classList.remove('error');
     inputElement.classList.remove('shake');
+}
+
+// Function to set active project (clear others and highlight the selected ones)
+// Save active state to localStorage
+function setActiveProject(selectedProjectContent) {
+    clearAllActiveStates();
+    selectedProjectContent.classList.add('active');
+}
+
+function setActiveNavButton(selectedButton) {
+    clearAllActiveStates();
+    selectedButton.classList.add('active');
+}
+
+// Function to clear all active states
+function clearAllActiveStates() {
+    const allProjectContents = document.querySelectorAll('.project-item-content');
+    allProjectContents.forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    const allNavButtons = document.querySelectorAll('.sidebar-static-btn');
+    allNavButtons.forEach(button => {
+        button.classList.remove('active');
+    });
 }
