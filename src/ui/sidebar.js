@@ -2,21 +2,56 @@ import { deleteProject, updateProject, addProject } from '../app/controller.js';
 
 export function setupSidebarToggle() {
     const hamburgerMenu = document.getElementById('hamburger-menu');
+
+    hamburgerMenu.addEventListener('click', () => {
+        console.log('Hamburger menu clicked');
+        toggleSidebar(); // Use the reusable function        
+    });
+}
+
+export function toggleSidebar(forceState = null) {
+    const hamburgerMenu = document.getElementById('hamburger-menu');
     const icon = hamburgerMenu.querySelector('.material-symbols-outlined');    
     const sidebar = document.getElementById('sidebar');
     const header = document.querySelector('header');
     
-    hamburgerMenu.addEventListener('click', () => {
-        console.log('Hamburger menu clicked');
-        sidebar.classList.toggle('active');
+    if (!sidebar) return;
+
+    let isActive;
+    if (forceState !== null) {
+        isActive = forceState;
+    } else {
+        isActive = !sidebar.classList.contains('active'); // Toggle state
+    }
+
+    // Apply the state
+    if (isActive) {
+        sidebar.classList.add('active');        
+    } else {
+        sidebar.classList.remove('active');
+    }
+
+    // Update the icon
+    if (icon) {
         icon.classList.add('hide');
-        
         setTimeout(() => {
-            icon.textContent = sidebar.classList.contains('active') ? 'close' : 'menu';
+            icon.textContent = isActive ? 'close' : 'menu';
             icon.classList.remove('hide');
-            header.classList.toggle('no-shadow', sidebar.classList.contains('active'));
-        }, 200);        
-    });
+        }, 200);
+    }
+
+    if (header) {
+        header.classList.toggle('no-shadow', isActive);
+    }
+    console.log(`Sidebar ${isActive ? 'opened' : 'collapsed'}`);
+}
+
+export function collapseSidebar(delay = 0) {
+    if (delay > 0) {
+        setTimeout(() => toggleSidebar(false), delay);
+    } else {
+        toggleSidebar(false);
+    }
 }
 
 export function renderSidebarProjects(projects) {
@@ -88,8 +123,8 @@ export function setupNavEvents() {
             // Set active state for this project
             setActiveProject(projectElement.closest('.project-item-content'));
 
-            const main = document.getElementById('main');
-            main.innerHTML = `<h2>${projectId}</h2><p>Content for ${projectId} project.</p>`;
+            // Update main content based on project ID
+            updateMainContent(projectId);            
             return;
         }
         
@@ -102,8 +137,9 @@ export function setupNavEvents() {
             // Set active state for this nav button
             setActiveNavButton(navBtn);
 
-            const main = document.getElementById('main');
-            main.innerHTML = `<h2>${projectName}</h2><p>Content for ${projectName}.</p>`;
+            // Update main content based on the project name
+            updateMainContent(projectName);
+        
             return;
         }
     });
@@ -305,6 +341,13 @@ function handleNewProject() {
         projectInput.removeEventListener('keydown', handleKeydown);
         saveButton.removeEventListener('click', saveNewProject);
         cancelButton.removeEventListener('click', cancelNewProject);
+
+        // Set as active project
+        setActiveProject(div);
+        // Update main content based on new project ID
+        updateMainContent(project.id);
+        // Collapse sidebar after adding new project
+        collapseSidebar(50);
     }
 
     function cancelNewProject() {
@@ -343,11 +386,13 @@ function clearInputError(inputElement) {
 function setActiveProject(selectedProjectContent) {
     clearAllActiveStates();
     selectedProjectContent.classList.add('active');
+    collapseSidebar(50); // Collapse sidebar after selection
 }
 
 function setActiveNavButton(selectedButton) {
     clearAllActiveStates();
     selectedButton.classList.add('active');
+    collapseSidebar(50); // Collapse sidebar after selection
 }
 
 // Function to clear all active states
@@ -361,4 +406,9 @@ function clearAllActiveStates() {
     allNavButtons.forEach(button => {
         button.classList.remove('active');
     });
+}
+
+function updateMainContent(projectId) {
+    const main = document.getElementById('main');
+    main.innerHTML = `<h2>${projectId}</h2><p>Content for ${projectId} project.</p>`;
 }
