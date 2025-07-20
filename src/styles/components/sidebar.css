@@ -65,6 +65,7 @@
     justify-content: space-between;
     border-radius: var(--border-radius);
     padding: var(--spacing-xs) var(--spacing-s);
+    cursor: pointer;
 }
 
 .delete-project-button,
@@ -94,10 +95,47 @@
     text-align: left;
     border: none;
     background: none;
-    padding: 0;
+    padding: var(--spacing-xs);
     color: var(--color-gray-dark);
 }
 
 .project-input:disabled {
     pointer-events: none;
+}
+
+.project-input:enabled {
+    cursor: text;            
+    color: var(--color-black);    
+    border-bottom: 1px solid var(--color-gray-dark);
+    pointer-events: all;
+    padding: var(--spacing-xs);
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.project-item-content.editing .edit-project-button {
+    display: none;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.edit-actions button {
+    width: fit-content;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    color: var(--color-gray-dark);
+}
+
+.edit-actions button:hover {
+    color: var(--color-black);
+}
+
+.edit-actions button .material-symbols-outlined {
+    margin: 0;
 }

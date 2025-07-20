@@ -16,10 +16,26 @@ export function getAllProjects() {
     return projects;
 }
 
-export function addProject({ title, description }) {
-    const newProject = createProject({ title, description });
-    projects.push(newProject);
-    saveProjects(projects);
+export function addProject({ title }) {
+    const newProject = createProject({ title });
+    try {
+        if (!title || title.trim() === '') {
+            return { success: false, message: 'Project title cannot be empty' };
+        }
+
+        const duplicateExists = projects.some(project => project.title.toLowerCase() === title.trim().toLowerCase());
+        if (duplicateExists) {
+            return { success: false, message: 'Project with this title already exists' };
+        }
+
+        const newProject = createProject({ title });
+        projects.push(newProject);
+        saveProjects(projects);
+        return { success: true, message: 'Project added successfully', data: newProject };
+    } catch (error) {
+        console.error('Error adding project:', error);
+        return;
+    }
 }
 
 function generateDummyProjects() {
@@ -44,6 +60,16 @@ export function deleteProject(projectId) {
         console.error('Error deleting project:', error);
         return { success: false, message: 'Failed to delete project' };
     }
+}
+
+export function updateProject(projectId, updatedData) {
+    const projectIndex = projects.findIndex(project => project.id === projectId);
+    if (projectIndex === -1) return { success: false, message: 'Project not found' };
+
+    projects[projectIndex] = { ...projects[projectIndex], ...updatedData };
+    saveProjects(projects);
+    console.log(`Project with ID ${projectId} updated successfully`);
+    return { success: true, message: 'Project updated successfully' };
 }
 
 export function findProjectById(projectId) {

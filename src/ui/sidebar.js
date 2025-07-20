@@ -1,4 +1,4 @@
-import { deleteProject } from '../app/controller.js';
+import { deleteProject, updateProject, addProject } from '../app/controller.js';
 
 export function setupSidebarToggle() {
     const hamburgerMenu = document.getElementById('hamburger-menu');
@@ -96,23 +96,92 @@ export function setupNavEvents() {
     });
 
     document.getElementById('new-project-btn').addEventListener('click', () => {
-        console.log('New project button clicked');        
+        handleNewProject();        
     });
 }
 
 function handleProjectEdit(projectItem) {
     const projectContent = projectItem.querySelector('.project-item-content');
     const projectId = projectContent.dataset.id;    
-    const projectInput = document.querySelector('.project-input');
+    const projectInput = projectContent.querySelector('.project-input');
     console.log('Handling project edit for:', projectId);
+
+    const originalTitle = projectInput.value;
+
+    projectContent.classList.add('editing');
+    projectInput.disabled = false;
+    projectInput.focus();
+    projectInput.select();
+
+    // Create Save and Cancel buttons
+    const actionButtons = document.createElement('div');
+    actionButtons.classList.add('edit-actions');
+
+    const cancelButton = document.createElement('button');
+    cancelButton.classList.add('cancel-edit-button');
+    cancelButton.innerHTML = '<span class="material-symbols-outlined">close</span>';
+
+    const saveButton = document.createElement('button');
+    saveButton.classList.add('save-edit-button');
+    saveButton.innerHTML = '<span class="material-symbols-outlined">check</span>';
+
+    actionButtons.appendChild(cancelButton);
+    actionButtons.appendChild(saveButton);
+    
+    projectInput.insertAdjacentElement('afterend', actionButtons);
+
+    // Handle keyboard events
+    function handleKeydown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            saveChanges();
+        } else if (event.key === 'Escape') {
+            event.preventDefault();
+            cancelChanges();
+        }
+    }
+
+    // Save changes function
+    function saveChanges() {
+        const newTitle = projectInput.value.trim();
+        if (newTitle === '') {
+            alert('Project title cannot be empty');
+            return;
+        } else {
+            console.log(`Saving project title: ${newTitle}`);
+            // Update project title in the DOM and controller
+            const result = updateProject(projectId, { title: newTitle });
+            if (result.success) projectInput.value = newTitle;                
+            exitEditMode();
+        }
+    }
+
+    function cancelChanges() {
+        projectInput.value = originalTitle; // Reset to original title
+        exitEditMode();
+    }
+
+    function exitEditMode() {
+        projectContent.classList.remove('editing');
+        projectInput.disabled = true;
+        actionButtons.remove();
+        projectInput.removeEventListener('keydown', handleKeydown);
+        saveButton.removeEventListener('click', saveChanges);
+        cancelButton.removeEventListener('click', cancelChanges);
+    }
+
+    // Attach event listeners
+    projectInput.addEventListener('keydown', handleKeydown);
+    saveButton.addEventListener('click', saveChanges);
+    cancelButton.addEventListener('click', cancelChanges);
 }
 
 function handleProjectDelete(projectItem) {    
     const projectContent = projectItem.querySelector('.project-item-content');
     const projectId = projectContent.dataset.id;
-    console.log('Handling project delete for:', projectId);
+    const projectTitle = projectContent.querySelector('.project-input').value;
 
-    if (confirm(`Are you sure you want to delete the project "${projectId}"?`)) {    
+    if (confirm(`Are you sure you want to delete the project "${projectTitle}"?`)) {    
         const result = deleteProject(projectId);
         if (result.success) {            
             projectItem.remove();
@@ -120,7 +189,113 @@ function handleProjectDelete(projectItem) {
             alert(result.message || 'Failed to delete project');            
         }    
     }
+}
+
+function handleNewProject() {
+    const projectList = document.getElementById('project-list');
+
+    const li = document.createElement('li');
+    li.classList.add('project-item');
+
+    // Create div container
+    const div = document.createElement('div');
+    div.classList.add('project-item-content', 'editing');
+
+    // Create input for new project
+    const projectInput = document.createElement('input');
+    projectInput.classList.add('project-input');
+    projectInput.type = 'text';
+    projectInput.placeholder = 'Awesome Project';
+    projectInput.disabled = false; // Enable input for new project
     
-    // Here you would call the deleteProject function from your controller
-    // deleteProject(projectId);
+    // Create action buttons for new project
+    const actionButtons = document.createElement('div');
+    actionButtons.classList.add('edit-actions');
+
+    const cancelButton = document.createElement('button');
+    cancelButton.classList.add('cancel-edit-button');
+    cancelButton.innerHTML = '<span class="material-symbols-outlined">close</span>';
+
+    const saveButton = document.createElement('button');
+    saveButton.classList.add('save-edit-button');
+    saveButton.innerHTML = '<span class="material-symbols-outlined">check</span>';
+
+    actionButtons.appendChild(cancelButton);
+    actionButtons.appendChild(saveButton);
+
+    div.appendChild(projectInput);
+    li.appendChild(div);
+    projectList.appendChild(li);
+    projectInput.insertAdjacentElement('afterend', actionButtons);
+
+    projectInput.focus();
+
+    // Handle keyboard events
+    function handleKeydown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            saveNewProject();
+        } else if (event.key === 'Escape') {
+            event.preventDefault();
+            cancelNewProject();
+        }
+    }
+
+    // Save new project function
+    function saveNewProject() {
+        const title = projectInput.value.trim();
+        if (title === '') {
+            alert('Project title cannot be empty');
+            projectInput.focus();
+            return;
+        }
+
+        const result = addProject({ title });
+        if (result.success) {
+            console.log(`New project added: ${title}`);
+            updateNewProjectUI(result.data);
+        } else {
+            alert(result.message || 'Failed to add project');
+            projectInput.focus(); // Keep focus on input if save fails
+            return;
+        }
+    }
+
+    function updateNewProjectUI(project) {
+        div.classList.remove('editing');
+        div.dataset.id = project.id; // Set the new project ID
+        projectInput.value = project.title; // Set the input value to the new project title        
+        projectInput.disabled = true; // Disable input after saving
+        projectInput.dataset.id = project.id; // Set the ID for future reference
+
+        actionButtons.remove(); // Remove action buttons after saving
+
+        // Create delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete-project-button');
+        deleteButton.innerHTML = '<span class="material-symbols-outlined">delete</span>';
+
+        // Create edit button
+        const editButton = document.createElement('button');
+        editButton.classList.add('edit-project-button');
+        editButton.innerHTML = '<span class="material-symbols-outlined">edit</span>';
+
+        // Rearrange elements in the correct order: delete | input | edit
+        div.insertBefore(deleteButton, projectInput);
+        div.appendChild(editButton);
+
+        // Remove the event listeners from previous buttons
+        projectInput.removeEventListener('keydown', handleKeydown);
+        saveButton.removeEventListener('click', saveNewProject);
+        cancelButton.removeEventListener('click', cancelNewProject);
+    }
+
+    function cancelNewProject() {
+        projectInput.value = ''; // Reset input
+        li.remove(); // Remove the new project item
+    }
+
+    projectInput.addEventListener('keydown', handleKeydown);
+    saveButton.addEventListener('click', saveNewProject);
+    cancelButton.addEventListener('click', cancelNewProject);
 }
