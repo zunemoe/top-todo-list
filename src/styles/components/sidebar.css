@@ -157,6 +157,7 @@
 .project-item-content.active {
     background-color: var(--color-green);
     border-left: 3px solid var(--color-brown);
+    padding-left: calc(var(--spacing-s) - 3px);
 }
 
 .sidebar-static-btn.active {
