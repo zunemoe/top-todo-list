@@ -70,6 +70,7 @@ export function renderSidebarProjects(projects) {
         deleteButton.classList.add('delete-project-button');
         deleteButton.innerHTML = '<span class="material-symbols-outlined">delete</span>';
 
+        console.log(`Rendering project: ${project.title} (ID: ${project.id})`);
         const projectInput = document.createElement('input');
         projectInput.classList.add('project-input');
         projectInput.type = 'text';        
@@ -390,7 +391,7 @@ function setActiveProject(selectedProjectContent) {
     collapseSidebar(50); // Collapse sidebar after selection
 }
 
-function setActiveNavButton(selectedButton) {
+export function setActiveNavButton(selectedButton) {
     clearAllActiveStates();
     selectedButton.classList.add('active');
     collapseSidebar(50); // Collapse sidebar after selection

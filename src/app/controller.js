@@ -18,7 +18,6 @@ export function getAllProjects() {
 }
 
 export function addProject({ title }) {
-    const newProject = createProject({ title });
     try {
         if (!title || title.trim() === '') {
             return { success: false, message: 'Project title cannot be empty' };
@@ -35,7 +34,6 @@ export function addProject({ title }) {
         return { success: true, message: 'Project added successfully', data: newProject };
     } catch (error) {
         console.error('Error adding project:', error);
-        return;
     }
 }
 
@@ -132,7 +130,7 @@ function generateDummyProjects() {
         projectId: project.id,
       })
     );
-    saveProjectTodos(project.id, project.todos);
+    saveTodos(project.id, project.todos);
   });
 
   saveProjects(dummyProjects);

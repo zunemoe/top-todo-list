@@ -1,7 +1,5 @@
 html, body {
-    max-height: 100dvh;
     max-width: 100dvw;
-    height: 100%;
     width: 100%;
 }
 
@@ -44,4 +42,26 @@ footer {
     padding: var(--spacing-s);
     box-sizing: border-box;
     width: 100%;
+}
+
+.add-todo-fab {
+    position: fixed;
+    bottom: var(--spacing-s);
+    right: var(--spacing-s);
+    background-color: var(--color-green);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--spacing-s);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    z-index: var(--z-index-overlay);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+}
+
+.add-todo-fab:hover {
+    filter: brightness(var(--hover-brightness-dark));
 }

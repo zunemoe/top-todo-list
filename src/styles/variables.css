@@ -45,6 +45,7 @@
     --transition-fast: all 0.2s ease-in-out;
     --transition-slow: all 0.5s ease-in-out;
     --hover-brightness: 1.2;
+    --hover-brightness-dark: 0.9;
 
     /* Miscellaneous Variables */
     --border-radius: 8px;
