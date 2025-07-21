@@ -25,8 +25,8 @@
     --font-weight-normal: 400;
     --font-weight-light: 300;
     --line-height-base: 1.5;
-    --letter-spacing-wide: 0.05em;
-    --letter-spacing-tight: -0.01em;
+    --letter-spacing-wide: 0.05rem;
+    --letter-spacing-tight: -0.01rem;
 
     /* Margins, Paddings Variables */
     --spacing-l: 32px;

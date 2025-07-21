@@ -1,4 +1,5 @@
-import { deleteProject, updateProject, addProject } from '../app/controller.js';
+import { deleteProject, updateProject, addProject} from '../app/controller.js';
+import { updateMainContent } from './main.js';
 
 export function setupSidebarToggle() {
     const hamburgerMenu = document.getElementById('hamburger-menu');
@@ -131,14 +132,14 @@ export function setupNavEvents() {
         // Handle static navigation buttons (Today, This Week, etc.)
         const navBtn = event.target.closest('button[data-id]');
         if (navBtn) {
-            const projectName = navBtn.dataset.id;
-            console.log(`Navigation button clicked for: ${projectName}`);
+            const projectId = navBtn.dataset.id;
+            console.log(`Navigation button clicked for: ${projectId}`);
 
             // Set active state for this nav button
             setActiveNavButton(navBtn);
 
             // Update main content based on the project name
-            updateMainContent(projectName);
+            updateMainContent(projectId);
         
             return;
         }
@@ -408,7 +409,3 @@ function clearAllActiveStates() {
     });
 }
 
-function updateMainContent(projectId) {
-    const main = document.getElementById('main');
-    main.innerHTML = `<h2>${projectId}</h2><p>Content for ${projectId} project.</p>`;
-}

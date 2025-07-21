@@ -1,5 +1,6 @@
 import { loadProjects, saveProjects, loadTodos, saveTodos } from './storage';
 import { createProject } from './project';
+import { createTodo } from './todo';
 
 let projects = [];
 
@@ -39,12 +40,103 @@ export function addProject({ title }) {
 }
 
 function generateDummyProjects() {
-    console.log('Generating dummy projects');
-    const projectTitles = ['Personal', 'Work', 'Groceries', 'Reading List'];
-    const dummyProjects = projectTitles.map(title => createProject({ title }));
+  console.log("Generating dummy projects");
+  const projectTitles = ["Personal", "Work", "Groceries", "Reading List"];
+  const dummyProjects = projectTitles.map((title) => createProject({ title }));
 
-    saveProjects(dummyProjects);
-    return dummyProjects;
+  // Sample todos data
+  const sampleTodos = {
+    Personal: [
+      {
+        title: "Call dentist for appointment",
+        description: "Schedule cleaning and checkup for next month",
+        priority: "high",
+        dueDate: "2025-07-25",
+      },
+      { title: "Organize photo albums", priority: "low" },
+      {
+        title: "Plan weekend trip",
+        description:
+          "Research destinations, book hotel, and create itinerary for the family vacation",
+        priority: "medium",
+        dueDate: "2025-07-30",
+      },
+      { title: "Update resume", priority: "medium" },
+    ],
+    Work: [
+      {
+        title: "Finish quarterly report",
+        description:
+          "Compile Q3 metrics, analyze performance trends, and prepare executive summary",
+        priority: "high",
+        dueDate: "2025-07-28",
+      },
+      {
+        title: "Schedule team meeting",
+        description:
+          "Coordinate with all team members for sprint planning session",
+        priority: "medium",
+      },
+      {
+        title: "Review code submissions",
+        priority: "high",
+        dueDate: "2025-07-24",
+      },
+      {
+        title: "Prepare presentation slides",
+        priority: "medium",
+        dueDate: "2025-07-26",
+      },
+    ],
+    Groceries: [
+      { title: "Buy milk and eggs", priority: "high" },
+      {
+        title: "Get fresh vegetables",
+        description:
+          "Carrots, broccoli, spinach, and bell peppers for the week",
+        priority: "medium",
+      },
+      {
+        title: "Pick up prescription",
+        description: "Monthly medication refill at CVS pharmacy",
+        priority: "high",
+      },
+      {
+        title: "Buy birthday gift for mom",
+        priority: "medium",
+        dueDate: "2025-07-29",
+      },
+    ],
+    "Reading List": [
+      {
+        title: 'Finish "The Clean Code" book',
+        description: "Complete chapters 8-12 and take notes on key principles",
+        priority: "medium",
+      },
+      { title: "Read latest tech articles", priority: "low" },
+      { title: "Study JavaScript patterns", priority: "high" },
+      {
+        title: "Review design principles",
+        description:
+          "Focus on SOLID principles and their practical applications",
+        priority: "medium",
+      },
+    ],
+  };
+
+  dummyProjects.forEach((project) => {
+    const todos = sampleTodos[project.title] || [];
+    project.todos = todos.map((todo) =>
+      createTodo({
+        ...todo,
+        projectId: project.id,
+      })
+    );
+    saveProjectTodos(project.id, project.todos);
+  });
+
+  saveProjects(dummyProjects);
+  return dummyProjects;
 }
 
 export function deleteProject(projectId) {
@@ -79,10 +171,7 @@ export function findProjectById(projectId) {
 
 export function loadAllTodos() {
     console.log('Loading all todos for all projects');
-    return projects.map(project => ({
-        ...project,
-        todos: loadTodos(project.id),
-    }));
+    return projects.flatMap(project => loadTodos(project.id));
 }
 
 export function loadProjectTodos(projectId) {

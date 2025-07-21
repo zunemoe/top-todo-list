@@ -1,5 +1,5 @@
 // Import CSS files
-import './styles/main.css';
+import './styles/base.css';
 import { initDOM } from './ui/dom';
 import { renderInbox } from './ui/todo-list-ui';
 import { renderProjectList } from './ui/project-ui';

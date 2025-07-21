@@ -3,12 +3,9 @@ export function createTodo({
     description = '',
     dueDate = null,
     priority = 'medium',
-    assignee = '',
     checklist = [],
     completed = false,
     projectId = null,
-    createdAt = new Date().toISOString(),
-    updatedAt = new Date().toISOString(),
 }) {
     return {
         id: crypto.randomUUID(),
@@ -16,7 +13,6 @@ export function createTodo({
         description,
         dueDate,
         priority,
-        assignee,
         checklist,
         completed,
         projectId,

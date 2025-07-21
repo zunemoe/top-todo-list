@@ -14,20 +14,23 @@ header {
 }
 
 body {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 footer {
     text-align: center;
     padding: var(--spacing-xs);
+    margin-top: auto;
 }
 
 #app {
     display: flex;
     flex-direction: column;
+    flex: 1;
     position: relative;
+    width: 100%;
 }
 
 #sidebar {
@@ -38,5 +41,7 @@ footer {
 
 #main {
     flex: 1;
-    padding: var(--spacing-m);
+    padding: var(--spacing-s);
+    box-sizing: border-box;
+    width: 100%;
 }
