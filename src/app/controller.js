@@ -144,7 +144,7 @@ export function deleteProject(projectId) {
 
         if (projects.length === initialLength) return { success: false, message: 'Project not found' };
         saveProjects(projects);
-        console.log(`Project with ID ${projectId} deleted successfully`);
+        // console.log(`Project with ID ${projectId} deleted successfully`);
         return { success: true, message: 'Project deleted successfully' };
     } catch (error) {
         console.error('Error deleting project:', error);
@@ -158,7 +158,7 @@ export function updateProject(projectId, updatedData) {
 
     projects[projectIndex] = { ...projects[projectIndex], ...updatedData };
     saveProjects(projects);
-    console.log(`Project with ID ${projectId} updated successfully`);
+    // console.log(`Project with ID ${projectId} updated successfully`);
     return { success: true, message: 'Project updated successfully' };
 }
 

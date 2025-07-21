@@ -1,10 +1,10 @@
 const PROJECTS_KEY = 'projects';
 
 export function loadProjects() {
-    console.log('Loading projects from storage');
+    // console.log('Loading projects from storage');
     try {
         const data = localStorage.getItem(PROJECTS_KEY);
-        console.log('Projects loaded:', data);
+        // console.log('Projects loaded:', data);
         return data ? JSON.parse(data) : [];
     } catch (error) {
         console.error('Error loading projects:', error);
@@ -13,7 +13,7 @@ export function loadProjects() {
 }
 
 export function saveProjects(projects) {
-    console.log('Saving projects to storage');
+    // console.log('Saving projects to storage');
     try {
         localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
     } catch (error) {
@@ -22,7 +22,7 @@ export function saveProjects(projects) {
 }
 
 export function loadTodos(projectId) {
-    console.log(`Loading todos for project ${projectId} from storage`);
+    // console.log(`Loading todos for project ${projectId} from storage`);
     try {
         const key = `todos_${projectId}`;
         const data = localStorage.getItem(key);
@@ -34,7 +34,7 @@ export function loadTodos(projectId) {
 }
 
 export function saveTodos(projectId, todos) {
-    console.log(`Saving todos for project ${projectId} to storage`);
+    // console.log(`Saving todos for project ${projectId} to storage`);
     try {
         const key = `todos_${projectId}`;
         localStorage.setItem(key, JSON.stringify(todos));

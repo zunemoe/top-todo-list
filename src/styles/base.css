@@ -9,7 +9,7 @@
 @import './components/footer.css';
 @import './components/sidebar.css';
 
-/* @import './pages/form-ui.css'; */
+@import './pages/form.css';
 /* @import './pages/project-ui.css'; */
 /* @import './pages/todo-ui.css'; */
 
