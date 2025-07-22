@@ -1,45 +1,62 @@
+import { showInputError, clearInputError } from "../app/components/utility";
+
 export function createTodoForm(onSubmit, onCancel) {
     let element = null;
     let viewportHandler = null;
 
-    function render(todo = null) {    
-        element = document.createElement('div');
-        element.classList.add('todo-form');
-        element.innerHTML = `
-            <div class="form-handle"></div>
-            <form class="form-content">
-                <div class="form-row">                
-                    ${todo ? `<input class="checkbox" type="checkbox" ${todo.completed ? 'checked' : ''} />` : ''}
-                    <input type="text" id="todo-title" class="form-input" name="title" placeholder="What would you like to do?" value="${todo ? todo.title : ''}" required />                
-                </div>
+    function render(todo = null) {
+        console.log('Rendering form with todo:', todo);
+        console.log('Todo is truthy:', !!todo);
+      element = document.createElement("div");
+      element.classList.add("todo-form");
+      element.innerHTML = `
+        <div class="form-handle"></div>
+        <form class="form-content">
+            <div class="form-row">                
+                ${todo ? `<input class="checkbox" type="checkbox" ${todo.completed ? "checked" : ""} />`: ""}
+                <input type="text" id="todo-title" class="form-input" name="title" 
+                       placeholder="What would you like to do?" 
+                       value="${todo?.title || ""}" required />                
+            </div>
 
-                <div class="form-row">    
-                    <textarea name="description" id="todo-description" class="form-input" placeholder="Add a description">${todo ? todo.description : ''}</textarea>
-                </div>
+            <div class="form-row">    
+                <textarea name="description" id="todo-description" class="form-input" 
+                          placeholder="Add a description">${
+                            todo?.description || ""
+                          }</textarea>
+            </div>
 
-                <div class="form-buttons">
-                    <input type="date" name="due-date" id="due-date" value="${todo ? formatDateForInput(todo.dueDate) : ''}" />
-                    <select name="priority" id="todo-priority">
-                        <option value="high" ${todo && todo.priority === 'high' ? 'selected' : ''}>High</option>
-                        <option value="medium" ${todo && todo.priority === 'medium' ? 'selected' : ''}>Medium</option>
-                        <option value="low" ${todo && todo.priority === 'low' ? 'selected' : ''}>Low</option>
-                    </select>
-                    <button type="submit" class="submit-btn" id="save-todo">
-                        <span class="material-symbols-outlined">check</span>
-                    </button> 
-                </div>
-            </form>
-        `;
+            <div class="form-buttons">
+                <input type="date" name="due-date" id="due-date" 
+                       value="${formatDateForInput(todo?.dueDate)}" />
+                <select name="priority" id="todo-priority">
+                    <option value="high" ${
+                      todo?.priority === "high" ? "selected" : ""
+                    }>High</option>
+                    <option value="medium" ${
+                      todo?.priority === "medium" ? "selected" : ""
+                    }>Medium</option>
+                    <option value="low" ${
+                      todo?.priority === "low" ? "selected" : ""
+                    }>Low</option>
+                </select>
+                <button type="submit" class="submit-btn" id="save-todo">
+                    <span class="material-symbols-outlined">check</span>
+                </button> 
+            </div>
+        </form>
+    `;
 
-        setupEvents();
-        setupKeyboardHandling();
+      setupEvents();
+      setupKeyboardHandling();
 
-        return element;
+      return element;
     }
 
     function setupEvents() {
-        const form = element.querySelector('todo-form');
+        const form = element.querySelector('form');
         const saveBtn = element.querySelector('#save-todo');
+        const checkbox = element.querySelector('.checkbox');
 
         saveBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -51,8 +68,21 @@ export function createTodoForm(onSubmit, onCancel) {
             handleSubmit();
         });
 
+        if (checkbox) {
+            checkbox.addEventListener('change', () => {
+                const titleInput = element.querySelector('#todo-title');
+                if (checkbox.checked) titleInput.classList.add('strike');
+                else titleInput.classList.remove('strike');     
+                
+                if (onSubmit) {
+                    const formData = getFormData();
+                    onSubmit(formData);
+                }
+            });
+        }
+
         element.addEventListener('click', (e) => {
-            e.stoppropPropagation(); // Prevent click events from bubbling up to the modal overlay
+            e.stopPropagation(); // Prevent click events from bubbling up to the modal overlay
         });
     }
 
@@ -72,21 +102,13 @@ export function createTodoForm(onSubmit, onCancel) {
     }
 
     function validateForm(data) {
+        const titleInput = element.querySelector('#todo-title');
         if (!data.title) {
-            showError('Title is required');
+            showInputError(titleInput);
             return false;
         }
+        clearInputError(titleInput);
         return true;
-    }
-
-    function showError(message) {
-        console.error(message);
-        const titleInput = element.querySelector('#todo-title');
-        titleInput.classList.add('error');
-
-        setTimeout(() => {
-            titleInput.classList.remove('error');
-        }, 3000);
     }
 
     function setupKeyboardHandling() {

@@ -195,8 +195,8 @@ export function _saveTodo(formData, todo, modal, todoForm) {
     };
     updateTodo(todo.id, updatedTodo);
 
-    updateMainContent(todo.projectId);
-    closeForm(modal, todoForm);
+    const activeProjectId = localStorage.getItem('activeProjectId');
+    updateMainContent(activeProjectId || 'inbox');
 }
 
 export function _createTodo(formData, modal, todoForm) {    
@@ -208,8 +208,9 @@ export function _createTodo(formData, modal, todoForm) {
     console.log('Creating todo with data:', todoData);
     const newTodo = createTodo(todoData);
     addTodo(newTodo);
-    updateMainContent(newTodo.projectId);
-    closeForm(modal, todoForm);
+
+    if (newTodo.projectId) updateMainContent(newTodo.projectId);
+    else updateMainContent('inbox');
 }
 
 export function _deleteTodo(todoId) {
@@ -223,39 +224,30 @@ export function _deleteTodo(todoId) {
     updateMainContent(todo.projectId);
 }
 
-// export function addTodoToProject(projectId, todo) {
-//     console.log(`Adding todo to project ID: ${projectId}`);
-//     const project = findProjectById(projectId);
-//     if (!project) return;
-//     project.todos.push(todo);
-//     saveProjectTodos(projectId, project.todos);
-// }
-
-// export function deleteTodoFromProject(projectId, todoId) {
-//     console.log(`Deleting todo with ID: ${todoId} from project ID: ${projectId}`);
-//     const project = findProjectById(projectId);
-//     if (!project) return;
-//     project.todos = project.todos.filter(todo => todo.id !== todoId);
-//     saveProjectTodos(projectId, project.todos);
-// }
-
-export function toggleTodoCompleteById(projectId, todoId) {
-    console.log(`Toggling completion for todo ID: ${todoId} in project ID: ${projectId}`);
-    const project = findProjectById(projectId);
-    if (!project) return;
-    const todo = project.todos.find(todo => todo.id === todoId);
+export function toggleTodoCompleteById(todoId) {
+    const todo = loadTodo(todoId);
     if (todo) {
         todo.completed = !todo.completed;
-        saveProjectTodos(projectId, project.todos);
+        updateTodo(todoId, { completed: todo.completed });
     }
+    const activeProjectId = localStorage.getItem('activeProjectId');
+    updateMainContent(activeProjectId || 'inbox');
 }
 
 export function openTodoForm(todo = null) {
   const modal = createModal();
 
   const todoForm = createTodoForm(
-    (formData) => handleFormSubmit(formData, todo, modal, todoForm), 
-    () => closeForm(modal, todoForm)
+    (formData) => {
+      handleFormSubmit(formData, todo, modal, todoForm);
+      modal.close();
+      todoForm.cleanup();
+    },
+    () => {
+      console.log("Form cancelled");
+      modal.close();
+      todoForm.cleanup();
+    }
   );
 
   const formElement = todoForm.render(todo);
@@ -266,8 +258,11 @@ export function openTodoForm(todo = null) {
 function handleFormSubmit(formData, todo = null, modal, todoForm) {
   if (todo) {
     // updateTodo(todo.id, formData);
-    saveTodo(formData, todo, modal, todoForm);
+    console.log('Updating existing todo:', todo.id);
+    _saveTodo(formData, todo, modal, todoForm);
   } else {
-    createTodo(formData, modal, todoForm);
+    console.log('Creating new todo');
+    _createTodo(formData, modal, todoForm);
   }
 }
+

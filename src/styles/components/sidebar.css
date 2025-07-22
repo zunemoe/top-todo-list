@@ -113,20 +113,6 @@
     transition: all 0.3s ease-in-out;
 }
 
-.project-input.error {
-    border-bottom: 1px solid var(--color-red);    
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
-    20%, 40%, 60%, 80% { transform: translateX(3px); }
-}
-
-.shake {
-    animation: shake 0.5s ease-in-out;
-}
-
 .project-item-content.editing .edit-project-button {
     display: none;
 }

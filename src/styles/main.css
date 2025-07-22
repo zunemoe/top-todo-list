@@ -74,6 +74,11 @@
     color: var(--color-black);
 }
 
+.strike {
+    text-decoration: line-through;
+    color: var(--color-gray-dark);
+}
+
 .todo-details {
     white-space: normal;
     overflow: hidden;

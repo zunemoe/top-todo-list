@@ -53,6 +53,8 @@
 
 .form-row {
     margin-bottom: 4px;
+    display: flex;
+    gap: 6px;
 }
 
 .form-input {
@@ -60,6 +62,12 @@
     border: none;
     outline: none;
     font-size: var(--font-size-s);
+    color: var(--color-black);
+}
+
+#todo-title.error {
+    color: var(--color-red);
+    margin-top: var(--spacing-xs);
 }
 
 #todo-description {
@@ -67,6 +75,10 @@
     min-height: 1.2em;
     resize: none;
     overflow: hidden;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-light);
+    letter-spacing: var(--letter-spacing-tight);
+    color: var(--color-gray-dark);
 }
 
 .form-buttons {

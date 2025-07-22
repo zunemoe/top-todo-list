@@ -1,18 +1,14 @@
-import { _loadTodos, findProjectById } from "../app/controller";
+import { _loadTodos, findProjectById, toggleTodoCompleteById, openTodoForm } from "../app/controller";
 
 export function updateMainContent(projectId = null) {
     let todos = [];
     let title = '';
 
     const activeProjectId = localStorage.getItem('activeProjectId');
+    const targetId = projectId || activeProjectId;
 
-    if (projectId !== null) {
-        todos = _loadTodos(projectId);
-        const project = findProjectById(projectId);
-        title = project ? project.title : '';
-        console.log(`Loading todos for project: ${title}`, todos);
-    } else {
-        switch (activeProjectId) {
+    if (targetId) {
+        switch (targetId) {
             case 'inbox':
                 todos = _loadTodos();
                 title = 'Inbox';
@@ -34,7 +30,11 @@ export function updateMainContent(projectId = null) {
                 } 
                 break;
         }
+    } else {
+        todos = _loadTodos();
+        title = 'Inbox';
     }
+
     renderMainContent(title, todos);
 }
 
@@ -49,6 +49,8 @@ function renderMainContent(title, todos = []) {
             ${renderTodoList(todos)}
         </div>
     `;
+
+    setupTodoEventListeners(todos);
 }
 
 function renderTodoList(todos = []) {
@@ -59,11 +61,34 @@ function renderTodoList(todos = []) {
     return todos.map(todo => `
         <div class="todo-item ${todo.priority}">
             <input class="checkbox" type="checkbox" ${todo.completed ? 'checked' : ''} />                
-            <span class="todo-title">${todo.title}</span>
+            <span class="todo-title ${ todo.completed ? 'strike' : '' }">${todo.title}</span>
             <div class="todo-details">
                 <p class="todo-description">${todo.description}</p>
                 <span class="todo-due-date">${todo.dueDate ? new Date(todo.dueDate).toLocaleDateString() : ''}</span>            
             </div>                        
         </div>
         `).join('');
+}
+
+function setupTodoEventListeners(todos) {
+    const todoItems = document.querySelectorAll('.todo-item');
+
+    todoItems.forEach((item, index) => {
+        const checkbox = item.querySelector('.checkbox');
+        const todo = todos[index];
+
+        if (checkbox && todo) {
+            checkbox.addEventListener('change', () => {
+                toggleTodoCompleteById(todo.id);               
+            });
+
+            item.addEventListener('click', (event) => {
+                if (event.target === checkbox) return; // Prevent checkbox click from triggering item click
+                    // Handle click on the todo item, e.g., open details or edit
+                    
+                console.log(`Todo clicked: ${todo.title}`);
+                openTodoForm(todo);
+            });
+        }
+    });
 }

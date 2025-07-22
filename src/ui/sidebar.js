@@ -1,5 +1,6 @@
 import { deleteProject, updateProject, addProject} from '../app/controller.js';
 import { updateMainContent } from './main.js';
+import { showInputError, clearInputError } from '../app/components/utility.js';
 
 export function setupSidebarToggle() {
     const hamburgerMenu = document.getElementById('hamburger-menu');
@@ -361,26 +362,26 @@ function handleNewProject() {
     cancelButton.addEventListener('click', cancelNewProject);
 }
 
-function showInputError(inputElement) {
-    inputElement.classList.add('error');
-    inputElement.classList.add('shake');
-    inputElement.focus();
+// function showInputError(inputElement) {
+//     inputElement.classList.add('error');
+//     inputElement.classList.add('shake');
+//     inputElement.focus();
 
-    setTimeout(() => {     
-        inputElement.classList.remove('shake');
-    }, 500);
+//     setTimeout(() => {     
+//         inputElement.classList.remove('shake');
+//     }, 500);
 
-    const clearOnInput = () => {
-        clearInputError(inputElement);
-        inputElement.removeEventListener('input', clearOnInput);
-    }
-    inputElement.addEventListener('input', clearOnInput);
-}
+//     const clearOnInput = () => {
+//         clearInputError(inputElement);
+//         inputElement.removeEventListener('input', clearOnInput);
+//     }
+//     inputElement.addEventListener('input', clearOnInput);
+// }
 
-function clearInputError(inputElement) {
-    inputElement.classList.remove('error');
-    inputElement.classList.remove('shake');
-}
+// function clearInputError(inputElement) {
+//     inputElement.classList.remove('error');
+//     inputElement.classList.remove('shake');
+// }
 
 // Function to set active project (clear others and highlight the selected ones)
 // Save active state to localStorage
