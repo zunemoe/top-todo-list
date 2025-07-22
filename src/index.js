@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadInboxTodos() {
-    updateMainContent('inbox');
+    updateMainContent();
     const inboxButton = document.querySelector('.sidebar-static-btn[data-id="inbox"]');
     setActiveNavButton(inboxButton);
 }

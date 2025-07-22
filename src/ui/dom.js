@@ -1,4 +1,4 @@
-import { openForm } from './form-modal.js';
+import { createTodoForm } from './todo-form.js';
 
 export function renderAddTodoForm() {
     const main = document.getElementById('app');
@@ -7,7 +7,7 @@ export function renderAddTodoForm() {
     fab.classList.add('add-todo-fab');
     fab.innerHTML = '<span class="material-symbols-outlined">add_2</span>';
     fab.addEventListener('click', () => {
-        openForm('new-todo');
+        // createTodoForm().open();
     });
 
     main.appendChild(fab);

@@ -1,6 +1,9 @@
-import { loadProjects, saveProjects, loadTodos, saveTodos } from './storage';
+import { loadProjects, saveProjects, loadTodo, loadTodos, addTodo, deleteTodo, updateTodo } from './storage';
 import { createProject } from './project';
 import { createTodo } from './todo';
+import { createModal } from './components/modal';
+import { createTodoForm } from '../ui/todo-form';
+import { updateMainContent } from '../ui/main';
 
 let projects = [];
 
@@ -9,6 +12,13 @@ export function initController() {
     projects = loadProjects();
     if (!projects || projects.length === 0) {
         projects = generateDummyProjects();
+    }
+
+    // ✅ Set initial active project if none exists
+    const activeProjectId = localStorage.getItem('activeProjectId');
+    if (!activeProjectId) {
+        localStorage.setItem('activeProjectId', 'inbox');
+        console.log('Set initial active project to Inbox');
     }
 }
 
@@ -123,14 +133,14 @@ function generateDummyProjects() {
   };
 
   dummyProjects.forEach((project) => {
-    const todos = sampleTodos[project.title] || [];
-    project.todos = todos.map((todo) =>
-      createTodo({
+    const _todos = sampleTodos[project.title] || [];
+    
+    _todos.forEach((todo) => {
+      addTodo(createTodo({
         ...todo,
-        projectId: project.id,
-      })
-    );
-    saveTodos(project.id, project.todos);
+        projectId: project.id, // Assign project ID to each Todo
+      }));
+    });
   });
 
   saveProjects(dummyProjects);
@@ -167,36 +177,67 @@ export function findProjectById(projectId) {
     return projects.find(project => project.id === projectId);
 }
 
-export function loadAllTodos() {
-    console.log('Loading all todos for all projects');
-    return projects.flatMap(project => loadTodos(project.id));
-}
+// export function loadAllTodos() {
+//     console.log('Loading all todos for all projects');
+//     return projects.flatMap(project => loadTodos(project.id));
+// }
 
-export function loadProjectTodos(projectId) {
+export function _loadTodos(projectId) {
     console.log(`Loading todos for project ID: ${projectId}`);
     return loadTodos(projectId);
 }
 
-export function saveProjectTodos(projectId, todos) {
-    console.log(`Saving todos for project ID: ${projectId}`);
-    saveTodos(projectId, todos);
+export function _saveTodo(formData, todo, modal, todoForm) {
+    const updatedTodo = {
+      ...formData,
+      dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString() : null,
+      updatedAt: new Date().toISOString()
+    };
+    updateTodo(todo.id, updatedTodo);
+
+    updateMainContent(todo.projectId);
+    closeForm(modal, todoForm);
 }
 
-export function addTodoToProject(projectId, todo) {
-    console.log(`Adding todo to project ID: ${projectId}`);
-    const project = findProjectById(projectId);
-    if (!project) return;
-    project.todos.push(todo);
-    saveProjectTodos(projectId, project.todos);
+export function _createTodo(formData, modal, todoForm) {    
+    const todoData = {
+      ...formData,
+      dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString() : null,
+      completed: false,
+    }
+    console.log('Creating todo with data:', todoData);
+    const newTodo = createTodo(todoData);
+    addTodo(newTodo);
+    updateMainContent(newTodo.projectId);
+    closeForm(modal, todoForm);
 }
 
-export function deleteTodoFromProject(projectId, todoId) {
-    console.log(`Deleting todo with ID: ${todoId} from project ID: ${projectId}`);
-    const project = findProjectById(projectId);
-    if (!project) return;
-    project.todos = project.todos.filter(todo => todo.id !== todoId);
-    saveProjectTodos(projectId, project.todos);
+export function _deleteTodo(todoId) {
+    console.log(`Deleting todo with ID: ${todoId}`);
+    const todo = loadTodo(todoId);
+    if (!todo) {
+        console.warn(`Todo with ID ${todoId} not found`);
+        return;
+    }
+    deleteTodo(todoId);
+    updateMainContent(todo.projectId);
 }
+
+// export function addTodoToProject(projectId, todo) {
+//     console.log(`Adding todo to project ID: ${projectId}`);
+//     const project = findProjectById(projectId);
+//     if (!project) return;
+//     project.todos.push(todo);
+//     saveProjectTodos(projectId, project.todos);
+// }
+
+// export function deleteTodoFromProject(projectId, todoId) {
+//     console.log(`Deleting todo with ID: ${todoId} from project ID: ${projectId}`);
+//     const project = findProjectById(projectId);
+//     if (!project) return;
+//     project.todos = project.todos.filter(todo => todo.id !== todoId);
+//     saveProjectTodos(projectId, project.todos);
+// }
 
 export function toggleTodoCompleteById(projectId, todoId) {
     console.log(`Toggling completion for todo ID: ${todoId} in project ID: ${projectId}`);
@@ -209,3 +250,24 @@ export function toggleTodoCompleteById(projectId, todoId) {
     }
 }
 
+export function openTodoForm(todo = null) {
+  const modal = createModal();
+
+  const todoForm = createTodoForm(
+    (formData) => handleFormSubmit(formData, todo, modal, todoForm), 
+    () => closeForm(modal, todoForm)
+  );
+
+  const formElement = todoForm.render(todo);
+  modal.open(formElement);
+  todoForm.focus();
+}
+
+function handleFormSubmit(formData, todo = null, modal, todoForm) {
+  if (todo) {
+    // updateTodo(todo.id, formData);
+    saveTodo(formData, todo, modal, todoForm);
+  } else {
+    createTodo(formData, modal, todoForm);
+  }
+}

@@ -124,7 +124,7 @@ export function setupNavEvents() {
             
             // Set active state for this project
             setActiveProject(projectElement.closest('.project-item-content'));
-
+            
             // Update main content based on project ID
             updateMainContent(projectId);            
             return;
@@ -138,12 +138,11 @@ export function setupNavEvents() {
 
             // Set active state for this nav button
             setActiveNavButton(navBtn);
-
             // Update main content based on the project name
             updateMainContent(projectId);
         
             return;
-        }
+        }        
     });
 
     document.getElementById('new-project-btn').addEventListener('click', () => {
@@ -388,12 +387,24 @@ function clearInputError(inputElement) {
 function setActiveProject(selectedProjectContent) {
     clearAllActiveStates();
     selectedProjectContent.classList.add('active');
+
+    // Save the active project ID to localStorage
+    const projectId = selectedProjectContent.dataset.id;
+    localStorage.setItem('activeProjectId', projectId);
+    console.log(`Active project set to ID: ${projectId}`);
+
     collapseSidebar(50); // Collapse sidebar after selection
 }
 
 export function setActiveNavButton(selectedButton) {
     clearAllActiveStates();
     selectedButton.classList.add('active');
+
+    // Save the active project ID to localStorage
+    const projectId = selectedButton.dataset.id;
+    localStorage.setItem('activeProjectId', projectId);
+    console.log(`Active navigation button set to ID: ${projectId}`);
+
     collapseSidebar(50); // Collapse sidebar after selection
 }
 

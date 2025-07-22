@@ -1,37 +1,44 @@
-import { loadAllTodos, loadProjectTodos, findProjectById } from "../app/controller";
+import { _loadTodos, findProjectById } from "../app/controller";
 
-export function updateMainContent(projectId) {
+export function updateMainContent(projectId = null) {
     let todos = [];
     let title = '';
 
-    switch (projectId) {
-        case 'inbox':
-            todos = loadAllTodos();
-            title = 'Inbox';
-            console.log('Inbox todos loaded:', todos);
-            break;
-        case 'today':
-            console.log('Loading Today todos');
-            title = 'Today';
-            // Load today's todos
-            break;
-        case 'week':
-            console.log('Loading This Week todos');
-            title = 'This Week';
-            // Load this week's todos
-            break;
-        default:
-            const project = findProjectById(projectId);
-            if (project) {
-                todos = loadProjectTodos(projectId);
-                title = project.title;
-            }        
-    }
+    const activeProjectId = localStorage.getItem('activeProjectId');
 
+    if (projectId !== null) {
+        todos = _loadTodos(projectId);
+        const project = findProjectById(projectId);
+        title = project ? project.title : '';
+        console.log(`Loading todos for project: ${title}`, todos);
+    } else {
+        switch (activeProjectId) {
+            case 'inbox':
+                todos = _loadTodos();
+                title = 'Inbox';
+                console.log('Inbox todos loaded:', todos);
+                break;
+            case 'today':
+                console.log('Loading Today todos');
+                title = 'Today';
+                break;
+            case 'week':
+                console.log('Loading This Week todos');
+                title = 'This Week';
+                break;
+            default:
+                const project = findProjectById(projectId);
+                if (project) {
+                    todos = _loadTodos(projectId);
+                    title = project.title;
+                } 
+                break;
+        }
+    }
     renderMainContent(title, todos);
 }
 
-function renderMainContent(title, todos) {
+function renderMainContent(title, todos = []) {
     const main = document.getElementById('main');
 
     main.innerHTML = `
@@ -44,7 +51,7 @@ function renderMainContent(title, todos) {
     `;
 }
 
-function renderTodoList(todos) {
+function renderTodoList(todos = []) {
     if (todos.length === 0) {
         return '<p class="no-todos">No todos yet. Add one to get started!</p>'
     }
