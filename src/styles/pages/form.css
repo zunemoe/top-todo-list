@@ -16,6 +16,202 @@
     pointer-events: all;
 }
 
+.air-datepicker {
+    z-index: calc(var(--z-index-modal) + 10) !important;
+}
+
+.air-datepicker-overlay {
+    z-index: calc(var(--z-index-modal) + 9) !important;
+}
+
+.input-group.priority-selector {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: var(--color-green);
+    border: 1px solid var(--color-gray-dark);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xs);
+    cursor: pointer;
+    min-width: 44px;
+    min-height: 44px;
+    transition: all 0.3s ease;
+}
+
+.input-group.priority-selector:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.input-group.priority-selector.active {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Priority Icon */
+.priority-icon {
+    font-size: 20px;
+    transition: all 0.3s ease;
+    color: inherit;
+}
+
+/* ✅ Priority Colors for the Selector */
+.priority-selector.priority-none {
+    background-color: #6b7280; /* Dark gray */
+    border-color: #6b7280;
+}
+
+.priority-selector.priority-none .priority-icon {
+    color: white;
+}
+
+.priority-selector.priority-low {
+    background-color: #10b981; /* Green */
+    border-color: #10b981;
+}
+
+.priority-selector.priority-low .priority-icon {
+    color: white;
+}
+
+.priority-selector.priority-medium {
+    background-color: #f59e0b; /* Orange */
+    border-color: #f59e0b;
+}
+
+.priority-selector.priority-medium .priority-icon {
+    color: white;
+}
+
+.priority-selector.priority-high {
+    background-color: #ef4444; /* Red */
+    border-color: #ef4444;
+}
+
+.priority-selector.priority-high .priority-icon {
+    color: white;
+}
+
+/* Priority Options Container */
+.priority-options {
+    position: absolute;
+    bottom: 100%;
+    left: 0%;
+    transform: none;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15);
+    padding: var(--spacing-xs);
+    margin-bottom: 8px;
+    z-index: 1000;
+    display: flex;
+    gap: var(--spacing-xs);
+    transition: all 0.3s ease;
+    transform-origin: bottom left;
+    min-width: 200px;
+}
+
+.priority-options.hidden {
+    display: none;
+}
+
+/* Individual Priority Option Buttons */
+.priority-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xs);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-height: 40px;
+    position: relative;
+}
+
+.priority-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.priority-option span {
+    font-size: 18px;
+}
+
+/* ✅ Priority Option Colors */
+.priority-option[data-priority="none"] {
+    background-color: #6b7280;
+    border-color: #6b7280;
+}
+
+.priority-option[data-priority="none"] span {
+    color: white;
+}
+
+.priority-option[data-priority="low"] {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
+.priority-option[data-priority="low"] span {
+    color: white;
+}
+
+.priority-option[data-priority="medium"] {
+    background-color: #f59e0b;
+    border-color: #f59e0b;
+}
+
+.priority-option[data-priority="medium"] span {
+    color: white;
+}
+
+.priority-option[data-priority="high"] {
+    background-color: #ef4444;
+    border-color: #ef4444;
+}
+
+.priority-option[data-priority="high"] span {
+    color: white;
+}
+
+/* Hover effects with lighter shades */
+.priority-option[data-priority="none"]:hover {
+    background-color: #9ca3af;
+}
+
+.priority-option[data-priority="low"]:hover {
+    background-color: #34d399;
+}
+
+.priority-option[data-priority="medium"]:hover {
+    background-color: #fbbf24;
+}
+
+.priority-option[data-priority="high"]:hover {
+    background-color: #f87171;
+}
+
+/* Animation for opening */
+.priority-options {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
 .todo-form {
     position: fixed;
     bottom: 0;

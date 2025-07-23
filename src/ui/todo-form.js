@@ -1,8 +1,11 @@
 import { showInputError, clearInputError } from "../app/components/utility";
+import AirDatepicker, { airDatePicker } from "air-datepicker";
+import 'air-datepicker/air-datepicker.css';
 
 export function createTodoForm(onSubmit, onCancel) {
     let element = null;
     let viewportHandler = null;
+    let datePicker = null;
 
     function render(todo = null) {
         console.log('Rendering form with todo:', todo);
@@ -13,7 +16,13 @@ export function createTodoForm(onSubmit, onCancel) {
         <div class="form-handle"></div>
         <form class="form-content">
             <div class="form-row">                
-                ${todo ? `<input class="checkbox" type="checkbox" ${todo.completed ? "checked" : ""} />`: ""}
+                ${
+                  todo
+                    ? `<input class="checkbox" type="checkbox" ${
+                        todo.completed ? "checked" : ""
+                      } />`
+                    : ""
+                }
                 <input type="text" id="todo-title" class="form-input" name="title" 
                        placeholder="What would you like to do?" 
                        value="${todo?.title || ""}" required />                
@@ -27,19 +36,33 @@ export function createTodoForm(onSubmit, onCancel) {
             </div>
 
             <div class="form-buttons">
-                <input type="date" name="due-date" id="due-date" 
-                       value="${formatDateForInput(todo?.dueDate)}" />
-                <select name="priority" id="todo-priority">
-                    <option value="high" ${
-                      todo?.priority === "high" ? "selected" : ""
-                    }>High</option>
-                    <option value="medium" ${
-                      todo?.priority === "medium" ? "selected" : ""
-                    }>Medium</option>
-                    <option value="low" ${
-                      todo?.priority === "low" ? "selected" : ""
-                    }>Low</option>
-                </select>
+                <div class="input-group date-picker">
+                    <span class="material-symbols-outlined calendar-icon">calendar_month</span>  
+                    <span class="date-display">${formatDateForDisplay(
+                      todo?.dueDate
+                    )}</span> 
+                    <input type="text" name="due-date" id="due-date" 
+                           value="${formatDateForDisplay(todo?.dueDate)}"
+                           style="display: none;" readonly />                    
+                </div>   
+                <div class="input-group priority-selector" data-priority="${todo?.priority || "none"}">                                        
+                    <div class="priority-options hidden">
+                        <button type="button" class="priority-option" data-priority="none">
+                            <span class="material-symbols-outlined">flag_2</span>
+                        </button>
+                        <button type="button" class="priority-option" data-priority="low">
+                            <span class="material-symbols-outlined">flag_2</span>
+                        </button>
+                        <button type="button" class="priority-option" data-priority="medium">
+                            <span class="material-symbols-outlined">flag_2</span>
+                        </button>
+                        <button type="button" class="priority-option" data-priority="high">
+                            <span class="material-symbols-outlined">flag_2</span>
+                        </button>
+                    </div>
+                    <span class="material-symbols-outlined priority-icon">flag_2</span>
+                </div>   
+                                          
                 <button type="submit" class="submit-btn" id="save-todo">
                     <span class="material-symbols-outlined">check</span>
                 </button> 
@@ -49,10 +72,178 @@ export function createTodoForm(onSubmit, onCancel) {
 
       setupEvents();
       setupKeyboardHandling();
+      setupAirDatePicker(todo);
+      setupPrioritySelector(todo);
 
       return element;
     }
 
+    function setupPrioritySelector(todo) {
+        const prioritySelector = element.querySelector('.priority-selector');
+        const priorityIcon = prioritySelector.querySelector('.priority-icon');
+        const priorityOptions = prioritySelector.querySelector('.priority-options');
+        const priorityButtons = priorityOptions.querySelectorAll('.priority-option');
+
+        if (!prioritySelector) return;
+
+        let isOpen = false;
+
+        prioritySelector.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            togglePriorityOptions();
+        });
+
+        priorityButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const selectedPriority = button.getAttribute('data-priority');
+                setPriority(selectedPriority);
+                closePriorityOptions();
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (isOpen && !prioritySelector.contains(e.target)) closePriorityOptions();
+        });
+
+        function togglePriorityOptions() {
+            if (isOpen) closePriorityOptions();
+            else openPriorityOptions();
+        }
+
+        function openPriorityOptions() {
+            isOpen = true;
+            priorityOptions.classList.remove('hidden');
+            prioritySelector.classList.add('active');            
+        }
+
+        function closePriorityOptions() {
+            isOpen = false;
+            priorityOptions.classList.add('hidden');
+            prioritySelector.classList.remove('active');
+        }
+
+        function setPriority(priority) {
+            prioritySelector.setAttribute('data-priority', priority);                 
+            updatePriorityVisuals(priority);
+        }
+
+        function updatePriorityVisuals(priority) {
+            prioritySelector.classList.remove('priority-none', 'priority-low', 'priority-medium', 'priority-high');
+            prioritySelector.classList.add(`priority-${priority}`);
+        }
+
+        const initialPriority = prioritySelector.getAttribute('data-priority');
+        updatePriorityVisuals(initialPriority);
+    }
+
+    function setupAirDatePicker(todo) {
+        const dateInput = element.querySelector('#due-date');
+        const dateGroup = element.querySelector('.date-picker');
+        const calendarIcon = dateGroup.querySelector('.calendar-icon');
+        const dateDisplay = dateGroup.querySelector('.date-display');
+
+        if (!dateInput || !dateGroup) return;
+
+        datePicker = new AirDatepicker(dateInput, {
+          locale: {
+            days: [
+              "Sunday",
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+            ],
+            daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            months: [
+              "January",
+              "February",
+              "March",
+              "April",
+              "May",
+              "June",
+              "July",
+              "August",
+              "September",
+              "October",
+              "November",
+              "December",
+            ],
+            monthsShort: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ],
+            today: "Today",
+            clear: "Clear",
+            dateFormat: "MM/dd/yyyy",
+            firstDay: 0, // Sunday as first day of the week
+          },
+          dateFormat: "MM/dd/yyyy",
+          minDate: new Date(),
+          autoClose: true, 
+          isMobile: true,         
+          buttons: ["clear", "today"],
+          onSelect: ({ date, formattedDate }) => {
+            updateDateDisplay(dateDisplay, date, formattedDate);
+            updateDatePickerState(dateGroup, date);
+            console.log("Selected date:", formattedDate);
+          },         
+          onHide: () => {
+            console.log("Datepicker hidden");
+          },
+        });
+
+        if (todo?.dueDate) {
+            const initialDate = new Date(todo.dueDate);
+            datePicker.selectDate(initialDate);
+            updateDateDisplay(dateDisplay, initialDate, formatDateForDisplay(todo.dueDate));
+            updateDatePickerState(dateGroup, initialDate);
+        }
+
+        calendarIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            datePicker.show();
+        });
+
+        dateGroup.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            datePicker.show();
+        });
+
+        updateDatePickerState(dateGroup, datePicker.selectedDates[0]);
+    }
+
+    function updateDateDisplay(dateDisplay, selectedDate, formattedDate) {
+        if (selectedDate && formattedDate) {
+            dateDisplay.textContent = formattedDate;
+            dateDisplay.classList.add('has-date');
+        } else {
+            dateDisplay.textContent = '';
+            dateDisplay.classList.remove('has-date');
+        }
+    }
+
+    function updateDatePickerState(dateGroup, date) {
+        if (date) dateGroup.setAttribute('data-has-date', 'true');
+        else dateGroup.removeAttribute('data-has-date');
+    }
+    
     function setupEvents() {
         const form = element.querySelector('form');
         const saveBtn = element.querySelector('#save-todo');
@@ -92,11 +283,14 @@ export function createTodoForm(onSubmit, onCancel) {
     }
 
     function getFormData() {
+        const selectedDate = datePicker ?.selectedDates[0];
+        const prioritySelector = element.querySelector('.priority-selector');
+        const priority = prioritySelector?.getAttribute('data-priority');
         return {
             title: element.querySelector('#todo-title').value.trim(),
             description: element.querySelector('#todo-description').value.trim(),
-            dueDate: element.querySelector('#due-date').value ? new Date(element.querySelector('#due-date').value).toISOString() : null,
-            priority: element.querySelector('#todo-priority').value,
+            dueDate: selectedDate ? selectedDate.toISOString() : null,
+            priority: priority === 'none' ? null : priority,
             completed: element.querySelector('.checkbox') ? element.querySelector('.checkbox').checked : false,
         };
     }
@@ -134,6 +328,11 @@ export function createTodoForm(onSubmit, onCancel) {
     }
 
     function cleanup() {
+        if (datePicker) {
+            datePicker.destroy();
+            datePicker = null;
+        }
+
         if (viewportHandler && 'visualViewport' in window) {
             window.visualViewport.removeEventListener('resize', viewportHandler);
         }
@@ -147,6 +346,12 @@ function formatDateForInput(dateString) {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+}
+
+function formatDateForDisplay(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US');
 }
 // export function openForm(type, todo = null) {
 //     // type values: 'new-todo', 'edit-todo'
