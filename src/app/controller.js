@@ -182,9 +182,47 @@ export function findProjectById(projectId) {
 //     return projects.flatMap(project => loadTodos(project.id));
 // }
 
-export function _loadTodos(projectId) {
+export function _loadTodos(projectId = null) {
     console.log(`Loading todos for project ID: ${projectId}`);
     return loadTodos(projectId);
+}
+
+export function _loadTodayTodos() {
+    console.log('Loading todos for today');
+    const allTodos = loadTodos();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of day
+
+    return allTodos.filter(todo => {
+        if (!todo.dueDate) return false;
+
+        const dueDate = new Date(todo.dueDate);
+        dueDate.setHours(0, 0, 0, 0); // Normalize to start of day
+        return dueDate.getTime() <= today.getTime() && !todo.completed;
+    });
+}
+
+export function _loadWeekTodos() {
+    console.log('Loading todos for this week');
+    const allTodos = loadTodos();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of day
+
+    const startDate = new Date(today);
+
+    // End of this week (Sunday)
+    const endOfWeek = new Date(today);
+    const daysUntilSunday = 7 - today.getDay();
+    endOfWeek.setDate(today.getDate() + daysUntilSunday);
+    endOfWeek.setHours(23, 59, 59, 999); // Normalize to end of day
+
+    return allTodos.filter(todo => {
+        if (!todo.dueDate) return false;
+
+        const dueDate = new Date(todo.dueDate);
+
+        return dueDate >= startDate && dueDate <= endOfWeek && !todo.completed;
+    });
 }
 
 export function _saveTodo(formData, todo, modal, todoForm) {

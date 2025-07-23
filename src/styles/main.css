@@ -15,7 +15,7 @@
 }
 
 .no-todos {
-
+    margin-left: var(--spacing-s);
 }
 
 .todo-item {

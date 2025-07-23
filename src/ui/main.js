@@ -1,4 +1,4 @@
-import { _loadTodos, findProjectById, toggleTodoCompleteById, openTodoForm } from "../app/controller";
+import { _loadTodos, _loadTodayTodos, _loadWeekTodos, findProjectById, toggleTodoCompleteById, openTodoForm } from "../app/controller";
 
 export function updateMainContent(projectId = null) {
     let todos = [];
@@ -16,10 +16,12 @@ export function updateMainContent(projectId = null) {
                 break;
             case 'today':
                 console.log('Loading Today todos');
+                todos = _loadTodayTodos();
                 title = 'Today';
                 break;
             case 'week':
                 console.log('Loading This Week todos');
+                todos = _loadWeekTodos();
                 title = 'This Week';
                 break;
             default:
