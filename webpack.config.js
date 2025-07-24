@@ -8,10 +8,19 @@ module.exports = {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"), // Output directory
     clean: true, // Clean the output directory before emit
+    publicPath: "/",
   },
   devtool: "eval-source-map",
   devServer: {
-    watchFiles: ["./src/template.html"],
+    host: "0.0.0.0", // Accept connections from any network interface
+    port: 8080, // Or any open port you prefer
+    allowedHosts: "all", // Accept requests from any hostname
+    watchFiles: ["./src/template.html"], // Keep this line
+    static: {
+      directory: path.resolve(__dirname, 'dist'), // Serve static content from dist
+    },
+    hot: true,
+    liveReload: true,
   },
   plugins: [
     new HtmlWebpackPlugin({

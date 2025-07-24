@@ -478,7 +478,10 @@ export function createTodoForm(onSubmit, onCancel) {
 
     function focus() {
         const titleInput = element.querySelector('#todo-title');
-        if (titleInput) setTimeout(() => titleInput.focus(), 300);
+        if (titleInput) setTimeout(() => {
+            titleInput.focus();
+            titleInput.click(); // Ensure focus is set correctly
+        }, 300);
     }
 
     function cleanup() {
