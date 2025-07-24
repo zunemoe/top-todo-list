@@ -1,4 +1,5 @@
 import { _loadTodos, _loadTodayTodos, _loadWeekTodos, findProjectById, toggleTodoCompleteById, openTodoForm } from "../app/controller";
+import { formatDueDate } from "../app/components/utility";
 
 export function updateMainContent(projectId = null) {
     let todos = [];
@@ -60,16 +61,18 @@ function renderTodoList(todos = []) {
         return '<p class="no-todos">No todos yet. Add one to get started!</p>'
     }
 
-    return todos.map(todo => `
+    return todos.map(todo => {
+        const dueDateInfo = formatDueDate(todo.dueDate);
+        return `
         <div class="todo-item ${todo.priority}">
             <input class="checkbox" type="checkbox" ${todo.completed ? 'checked' : ''} />                
             <span class="todo-title ${ todo.completed ? 'strike' : '' }">${todo.title}</span>
             <div class="todo-details">
                 <p class="todo-description">${todo.description}</p>
-                <span class="todo-due-date">${todo.dueDate ? new Date(todo.dueDate).toLocaleDateString() : ''}</span>            
+                ${dueDateInfo.text ? `<span class="todo-due-date ${dueDateInfo.cssClass}">${dueDateInfo.text}</span>` : ''}            
             </div>                        
         </div>
-        `).join('');
+        `}).join('');
 }
 
 function setupTodoEventListeners(todos) {

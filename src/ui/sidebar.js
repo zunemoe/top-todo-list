@@ -242,6 +242,9 @@ function handleProjectDelete(projectItem) {
         const result = deleteProject(projectId);
         if (result.success) {            
             projectItem.remove();
+            // Update main content to show default view
+            updateMainContent('inbox'); // Show all todos or default view
+            collapseSidebar(50); // Collapse sidebar after deletion
         } else {
             alert(result.message || 'Failed to delete project');            
         }    
@@ -361,27 +364,6 @@ function handleNewProject() {
     saveButton.addEventListener('click', saveNewProject);
     cancelButton.addEventListener('click', cancelNewProject);
 }
-
-// function showInputError(inputElement) {
-//     inputElement.classList.add('error');
-//     inputElement.classList.add('shake');
-//     inputElement.focus();
-
-//     setTimeout(() => {     
-//         inputElement.classList.remove('shake');
-//     }, 500);
-
-//     const clearOnInput = () => {
-//         clearInputError(inputElement);
-//         inputElement.removeEventListener('input', clearOnInput);
-//     }
-//     inputElement.addEventListener('input', clearOnInput);
-// }
-
-// function clearInputError(inputElement) {
-//     inputElement.classList.remove('error');
-//     inputElement.classList.remove('shake');
-// }
 
 // Function to set active project (clear others and highlight the selected ones)
 // Save active state to localStorage

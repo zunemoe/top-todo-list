@@ -65,7 +65,7 @@ export function loadTodo(todoId) {
 export function addTodo(todo) {
     try {
         const existingTodos = loadTodos();
-        existingTodos.push(todo);
+        existingTodos.unshift(todo);
         localStorage.setItem(TODOS_KEY, JSON.stringify(existingTodos));
     } catch (error) {
         console.error('Error adding todo:', error);

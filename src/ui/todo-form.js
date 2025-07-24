@@ -1,5 +1,5 @@
-import { showInputError, clearInputError } from "../app/components/utility";
-import AirDatepicker, { airDatePicker } from "air-datepicker";
+import { showInputError, clearInputError, formatDateForDisplay, formatDueDate } from "../app/components/utility";
+import AirDatepicker from "air-datepicker";
 import 'air-datepicker/air-datepicker.css';
 
 export function createTodoForm(onSubmit, onCancel) {
@@ -193,18 +193,15 @@ export function createTodoForm(onSubmit, onCancel) {
             firstDay: 0, // Sunday as first day of the week
           },
           dateFormat: "MM/dd/yyyy",
-          minDate: new Date(),
-          autoClose: true, 
-          isMobile: true,         
-          buttons: ["clear", "today"],
-          onSelect: ({ date, formattedDate }) => {
-            updateDateDisplay(dateDisplay, date, formattedDate);
+          autoClose: true,
+          isMobile: true,
+          buttons: ['clear'],    
+          onSelect: ({ date, datepicker }) => {
+            console.log("Date selected:", date);
+            console.log("Datepicker instance:", datepicker);
+            updateDateDisplay(dateDisplay, date);
             updateDatePickerState(dateGroup, date);
-            console.log("Selected date:", formattedDate);
-          },         
-          onHide: () => {
-            console.log("Datepicker hidden");
-          },
+          }    
         });
 
         if (todo?.dueDate) {
@@ -229,13 +226,36 @@ export function createTodoForm(onSubmit, onCancel) {
         updateDatePickerState(dateGroup, datePicker.selectedDates[0]);
     }
 
-    function updateDateDisplay(dateDisplay, selectedDate, formattedDate) {
-        if (selectedDate && formattedDate) {
-            dateDisplay.textContent = formattedDate;
+    function updateDateDisplay(dateDisplay, selectedDate) {
+        if (selectedDate) {
+            const dueDateInfo = formatDueDate(selectedDate);
+            dateDisplay.textContent = dueDateInfo.text || formatDateForDisplay(selectedDate);
             dateDisplay.classList.add('has-date');
+
+            // ✅ Remove old date classes properly
+            const existingClasses = Array.from(dateDisplay.classList);
+            existingClasses.forEach(cls => {
+                if (cls.startsWith('due-date-')) {
+                    dateDisplay.classList.remove(cls);
+                }
+            });
+
+            // ✅ Add new classes properly (split the string)
+            if (dueDateInfo.cssClass) {
+                const newClasses = dueDateInfo.cssClass.split(' ').filter(cls => cls.trim());
+                newClasses.forEach(cls => dateDisplay.classList.add(cls));
+            }
         } else {
             dateDisplay.textContent = '';
             dateDisplay.classList.remove('has-date');
+            
+            // Remove date classes when no date selected
+            const existingClasses = Array.from(dateDisplay.classList);
+            existingClasses.forEach(cls => {
+                if (cls.startsWith('due-date-')) {
+                    dateDisplay.classList.remove(cls);
+                }
+            });
         }
     }
 
@@ -342,17 +362,11 @@ export function createTodoForm(onSubmit, onCancel) {
     return { render, focus, cleanup };
 }
 
-function formatDateForInput(dateString) {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-}
-
-function formatDateForDisplay(dateString) {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US');
-}
+// function formatDateForDisplay(dateString) {
+//     if (!dateString) return '';
+//     const date = new Date(dateString);
+//     return date.toLocaleDateString('en-US');
+// }
 // export function openForm(type, todo = null) {
 //     // type values: 'new-todo', 'edit-todo'
 //     console.log('Opening Add Todo Form');

@@ -4,6 +4,7 @@ import { createTodo } from './todo';
 import { createModal } from './components/modal';
 import { createTodoForm } from '../ui/todo-form';
 import { updateMainContent } from '../ui/main';
+import { sortTodosByCompletion } from './components/utility';
 
 let projects = [];
 
@@ -184,12 +185,13 @@ export function findProjectById(projectId) {
 
 export function _loadTodos(projectId = null) {
     console.log(`Loading todos for project ID: ${projectId}`);
-    return loadTodos(projectId);
+    const todos = sortTodosByCompletion(loadTodos(projectId));
+    return todos;
 }
 
 export function _loadTodayTodos() {
     console.log('Loading todos for today');
-    const allTodos = loadTodos();
+    const allTodos = _loadTodos();
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Normalize to start of day
 
@@ -204,7 +206,7 @@ export function _loadTodayTodos() {
 
 export function _loadWeekTodos() {
     console.log('Loading todos for this week');
-    const allTodos = loadTodos();
+    const allTodos = _loadTodos();
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Normalize to start of day
 
