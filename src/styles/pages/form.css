@@ -104,9 +104,9 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* .input-group.date-picker[data-has-date="true"] {
+.input-group.date-picker[data-has-date="true"] {
     color: var(--color-orange);
-} */
+}
 
 .date-display {
     font-size: var(--font-size-s);
@@ -116,10 +116,6 @@
 .date-display.has-date {
     margin-left: 4px;
     color: var(--color-orange);
-}
-
-.date-display.has-date.due-date-past {
-    color: var(--color-red);
 }
 
 .air-datepicker {

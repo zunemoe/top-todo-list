@@ -1,0 +1,83 @@
+@media (min-width: 768px) {
+    html, body {
+        height: 100vh;
+        overflow: hidden; /* Prevent scrolling */
+    }
+
+    header {
+        flex: 0 0 auto;
+    }
+
+    footer {
+        flex: 0 0 auto;
+    }
+
+    #app {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-areas: "sidebar main";
+        grid-template-columns: 300px 1fr;
+        height: 100dvh;
+    }
+
+    #sidebar {
+        position: static;
+        right: auto;
+        width: 300px;
+        flex: 0 0 300px;
+        max-height: none;
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        grid-area: sidebar;         
+    }
+
+    #sidebar.active {
+        left: 0;
+    }
+
+    #main {
+        flex: 1;
+        grid-area: main;
+        padding: var(--spacing-m) var(--spacing-m) 0 var(--spacing-m);        
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .todos-container {
+        overflow-y: auto;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+
+    .todo-form {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        max-width: 500px;
+        max-height: 30vh;
+        height: auto;
+        transform: translate(-50%, -50%) scale(0.9);
+        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    opacity 0.3s ease-in-out;
+        display: block;
+        overflow-y: auto;
+        border-radius: var(--border-radius);
+    }
+
+    /*  Active state - show modal */
+    .todo-form.active {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    #todo-description {
+        min-height: 100px;
+        height: 200px;        
+    }
+
+    #hamburger-menu {
+        display: none; /* Hide hamburger menu on desktop */
+    }
+}
