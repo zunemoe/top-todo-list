@@ -54,14 +54,16 @@
     .todo-form {
         position: fixed;
         top: 50%;
-        left: 50%;
-        max-width: 500px;
-        max-height: 30vh;
-        height: auto;
+        left: 50%;     
+        right: auto;
+        bottom: auto;
+        width: auto;
+        min-width: 500px; 
+        height: auto;  
+        max-height: 80vh;
         transform: translate(-50%, -50%) scale(0.9);
         transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                    opacity 0.3s ease-in-out;
-        display: block;
+                    opacity 0.3s ease-in-out;        
         overflow-y: auto;
         border-radius: var(--border-radius);
     }
@@ -75,6 +77,14 @@
     #todo-description {
         min-height: 100px;
         height: 200px;        
+    }
+
+    .date-display {
+        font-size: var(--font-size-s);
+    }
+
+    .project-display {
+        font-size: var(--font-size-s);
     }
 
     #hamburger-menu {

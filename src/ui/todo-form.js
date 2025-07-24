@@ -89,39 +89,38 @@ export function createTodoForm(onSubmit, onCancel) {
 
     function setupProjectSelector(todo) {
         const projectSelector = element.querySelector('#project-selector');
-        const projectDisplay = element.querySelector('#project-display');
         const projectDropdown = element.querySelector('#project-dropdown');
 
         if (!projectSelector) return;
+        let isOpen = false;
 
         const selectedProjectId = todo?.projectId || null;
         populateProjectDropdown(selectedProjectId);
 
         projectSelector.addEventListener('click', (e) => {
+            e.preventDefault();
             e.stopPropagation();
             toggleProjectDropdown();
         });
 
         document.addEventListener('click', (e) => {
-            if (!projectSelector.contains(e.target)) {
+            if (isOpen && !projectSelector.contains(e.target)) {
                 closeProjectDropdown();
             }
         });
-    }
 
-    function populateProjectDropdown(selectedProjectId = null) {
+        function populateProjectDropdown(selectedProjectId = null) {
         const projectDropdown = element.querySelector('#project-dropdown');
         const projects = getAllProjects();
 
-        const inboxOption = createProjectOption('inbox', 'Inbox', 'inbox', selectedProjectId === 'inbox');
+        const inboxOption = createProjectOption('inbox', 'Inbox', selectedProjectId === 'inbox');
         const projectOptions = projects.map(project =>
-            createProjectOption(project.id, project.title, 'folder', selectedProjectId === project.id)
+            createProjectOption(project.id, project.title, selectedProjectId === project.id)
         );
 
         const clearOption = document.createElement('div');
         clearOption.classList.add('project-option', 'clear');
         clearOption.innerHTML = `
-            <span class="material-symbols-outlined">close</span>
             <span>No Project</span>
         `;
         clearOption.addEventListener('click', () => selectProject(null, 'No Project'));
@@ -139,69 +138,81 @@ export function createTodoForm(onSubmit, onCancel) {
         }
     }
 
-    function createProjectOption(id, title, icon, isSelected) {
-        const option = document.createElement('div');
-        option.classList.add('project-option');
-        option.classList.add(id === 'inbox' ? 'inbox' : 'project');
+        function createProjectOption(id, title, isSelected) {
+            const option = document.createElement('div');
+            option.classList.add('project-option');
+            option.classList.add(id === 'inbox' ? 'inbox' : 'project');
 
-        if (isSelected) option.classList.add('selected');
+            if (isSelected) option.classList.add('selected');
 
-        option.innerHTML = `
-            <span class="material-symbols-outlined">${icon}</span>
-            <span>${title}</span>
-        `;
+            option.innerHTML = `
+                <span>${title}</span>
+            `;
 
-        option.addEventListener('click', () => selectProject(id, title));
-        return option;
-    }
-
-    function selectProject(projectId, projectTitle) {
-        const formData = element.querySelector('form');
-        formData.dataset.projectId = projectId;
-
-        updateProjectDisplay(projectTitle, !!projectId);
-
-        element.querySelectorAll('.project-option').forEach(option => {
-            option.classList.remove('selected');
-        });
-
-        if (projectId) {
-            const selectedOption = element.querySelector(`.project-option[data-id="${projectId}"]`);
-            if (selectedOption) selectedOption.classList.add('selected');
+            option.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                selectProject(id, title);
+            });
+            return option;
         }
 
-        closeProjectDropdown();
-        console.log(`Selected project: ${projectTitle} (ID: ${projectId})`);
-    }
+        function selectProject(projectId, projectTitle) {
+            const formData = element.querySelector('form');
+            formData.dataset.projectId = projectId;
 
-    function updateProjectDisplay(title, hasProject) {
-        const projectSelector = element.querySelector('#project-selector');
-        const projectDisplay = element.querySelector('#project-display');
+            updateProjectDisplay(projectTitle, !!projectId);
 
-        if (hasProject) {
-            projectDisplay.textContent = title;
-            projectSelector.classList.add('has-project');
-            projectSelector.setAttribute('data-has-project', 'true');
-        } else {
-            projectDisplay.textContent = ''; // Clear the display for no project
-            projectSelector.classList.remove('has-project');
-            projectSelector.setAttribute('data-has-project', 'false');
+            element.querySelectorAll('.project-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            if (projectId) {
+                const selectedOption = element.querySelector(`.project-option[data-id="${projectId}"]`);
+                if (selectedOption) selectedOption.classList.add('selected');
+            }
+
+            closeProjectDropdown();
+            console.log(`Selected project: ${projectTitle} (ID: ${projectId})`);
+        }
+
+        function updateProjectDisplay(title, hasProject) {
+            const projectSelector = element.querySelector('#project-selector');
+            const projectDisplay = element.querySelector('#project-display');
+
+            if (hasProject) {
+                projectDisplay.textContent = title;
+                projectSelector.classList.add('has-project');
+                projectSelector.setAttribute('data-has-project', 'true');
+            } else {
+                projectDisplay.textContent = ''; // Clear the display for no project
+                projectSelector.classList.remove('has-project');
+                projectSelector.setAttribute('data-has-project', 'false');
+            }
+        }
+
+        function toggleProjectDropdown() {
+            if (isOpen) closeProjectDropdown();
+            else openProjectDropdown();
+        }
+
+        function openProjectDropdown() {
+            isOpen = true;
+            projectDropdown.classList.add('active');
+            projectSelector.classList.add('active');
+        }
+
+        function closeProjectDropdown() {
+            isOpen = false;
+            projectDropdown.classList.remove('active');
+            projectSelector.classList.remove('active');
         }
     }
 
-    function toggleProjectDropdown() {
-        const projectDropdown = element.querySelector('#project-dropdown');
-        projectDropdown.classList.toggle('active');
-    }
-
-    function closeProjectDropdown() {
-        const projectDropdown = element.querySelector('#project-dropdown');
-        projectDropdown.classList.remove('active');
-    }
+    
 
     function setupPrioritySelector(todo) {
         const prioritySelector = element.querySelector('.priority-selector');
-        const priorityIcon = prioritySelector.querySelector('.priority-icon');
         const priorityOptions = prioritySelector.querySelector('.priority-options');
         const priorityButtons = priorityOptions.querySelectorAll('.priority-option');
 
@@ -427,6 +438,7 @@ export function createTodoForm(onSubmit, onCancel) {
         const selectedDate = datePicker ?.selectedDates[0];
         const prioritySelector = element.querySelector('.priority-selector');
         const priority = prioritySelector?.getAttribute('data-priority');
+        const form = element.querySelector('form');
         return {
             title: element.querySelector('#todo-title').value.trim(),
             description: element.querySelector('#todo-description').value.trim(),

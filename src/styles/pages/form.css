@@ -71,7 +71,7 @@
 }
 
 #todo-description {
-    height: 100px;
+    height: 150px;
     min-height: 1.2em;
     resize: none;
     overflow: hidden;
@@ -83,13 +83,13 @@
 
 .form-buttons {
     display: flex;
-    gap: 4px;
+    gap: 0px;
 }
 
 .input-group.date-picker {    
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     border-radius: var(--border-radius);
     border: none;
     padding: var(--spacing-xs);
@@ -97,6 +97,8 @@
     min-width: 40px;
     min-height: 40px;
     color: var(--color-gray-dark);
+    flex-grow: 0;
+    flex-shrink: 1;
 }
 
 .input-group.date-picker:hover {
@@ -109,7 +111,7 @@
 }
 
 .date-display {
-    font-size: var(--font-size-s);
+    font-size: var(--font-size-xs);
     color: var(--color-gray-dark);
 }
 
@@ -138,6 +140,8 @@
     min-width: 40px;
     min-height: 40px;
     transition: all 0.3s ease;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .input-group.priority-selector:hover {
@@ -263,14 +267,16 @@
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     border-radius: var(--border-radius);
     border: none;
     padding: var(--spacing-xs);
     cursor: pointer;
     min-width: 40px;
     min-height: 40px;
-    transition: all 0.3s ease;        
+    transition: all 0.3s ease;    
+    margin-right: 4px;
+    flex-grow: 1;
 }
 
 .project-selector:hover {
@@ -289,24 +295,24 @@
 }
 
 .project-display {
-    font-size: var(--font-size-s);
+    font-size: var(--font-size-xs);
+    letter-spacing: var(--letter-spacing-tight);
     color: var(--color-gray-dark);
     margin-left: 4px;
-    max-width: 120px;
+    max-width: 200px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.project-display.has-project::before {
+/* .project-display.has-project::before {
     content: "# ";
-}
+} */
 
 .project-dropdown {
     position: absolute;
     bottom: 100%;
-    left: 0;
-    right: 0;
+    left: 0%;
     transform: none;
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -317,16 +323,20 @@
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs);
+    gap: 1px;
     transition: all 0.3s ease;
     transform-origin: bottom left;
+    width: max-content;
     min-width: 200px;
+    max-width: min(350px, 65vw);
     max-height: 200px;
     animation: slideUp 0.3s ease-out;
+    overflow-y: auto;
+    display: none;
 }
 
 .project-dropdown.active {
-    display: none;
+    display: flex;
 }
 
 .project-option {
@@ -337,11 +347,19 @@
     border: none;
     border-radius: var(--border-radius);
     padding: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    letter-spacing: var(--letter-spacing-tight);
     cursor: pointer;
     transition: all 0.3s ease;
     flex: 1;
     min-height: 40px;
     position: relative;
+}
+
+.project-option span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .submit-btn {
@@ -361,5 +379,7 @@
 .submit-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
