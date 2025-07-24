@@ -1,6 +1,7 @@
 import { showInputError, clearInputError, formatDateForDisplay, formatDueDate } from "../app/components/utility";
 import AirDatepicker from "air-datepicker";
 import 'air-datepicker/air-datepicker.css';
+import { getAllProjects, updateProject } from "../app/controller";
 
 export function createTodoForm(onSubmit, onCancel) {
     let element = null;
@@ -61,7 +62,14 @@ export function createTodoForm(onSubmit, onCancel) {
                         </button>
                     </div>
                     <span class="material-symbols-outlined priority-icon">flag_2</span>
-                </div>   
+                </div>  
+                
+                <div class="input-group project-selector" id="project-selector">
+                    <span class="material-symbols-outlined project-icon">tag</span>
+                    <span class="project-display" id="project-display"></span>
+                    <div class="project-dropdown" id="project-dropdown">
+                    </div>
+                </div>
                                           
                 <button type="submit" class="submit-btn" id="save-todo">
                     <span class="material-symbols-outlined">check</span>
@@ -74,8 +82,121 @@ export function createTodoForm(onSubmit, onCancel) {
       setupKeyboardHandling();
       setupAirDatePicker(todo);
       setupPrioritySelector(todo);
+      setupProjectSelector(todo);
 
       return element;
+    }
+
+    function setupProjectSelector(todo) {
+        const projectSelector = element.querySelector('#project-selector');
+        const projectDisplay = element.querySelector('#project-display');
+        const projectDropdown = element.querySelector('#project-dropdown');
+
+        if (!projectSelector) return;
+
+        const selectedProjectId = todo?.projectId || null;
+        populateProjectDropdown(selectedProjectId);
+
+        projectSelector.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleProjectDropdown();
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!projectSelector.contains(e.target)) {
+                closeProjectDropdown();
+            }
+        });
+    }
+
+    function populateProjectDropdown(selectedProjectId = null) {
+        const projectDropdown = element.querySelector('#project-dropdown');
+        const projects = getAllProjects();
+
+        const inboxOption = createProjectOption('inbox', 'Inbox', 'inbox', selectedProjectId === 'inbox');
+        const projectOptions = projects.map(project =>
+            createProjectOption(project.id, project.title, 'folder', selectedProjectId === project.id)
+        );
+
+        const clearOption = document.createElement('div');
+        clearOption.classList.add('project-option', 'clear');
+        clearOption.innerHTML = `
+            <span class="material-symbols-outlined">close</span>
+            <span>No Project</span>
+        `;
+        clearOption.addEventListener('click', () => selectProject(null, 'No Project'));
+
+        projectDropdown.innerHTML = '';
+        projectDropdown.appendChild(inboxOption);
+        projectOptions.forEach(option => projectDropdown.appendChild(option));
+        projectDropdown.appendChild(clearOption);
+
+        if (selectedProjectId) {
+            const selectedProject = selectedProjectId === 'inbox' ? { title: 'Inbox' } :
+            projects.find(p => p.id === selectedProjectId);
+
+            if (selectedProject) updateProjectDisplay(selectedProject.title, true);
+        }
+    }
+
+    function createProjectOption(id, title, icon, isSelected) {
+        const option = document.createElement('div');
+        option.classList.add('project-option');
+        option.classList.add(id === 'inbox' ? 'inbox' : 'project');
+
+        if (isSelected) option.classList.add('selected');
+
+        option.innerHTML = `
+            <span class="material-symbols-outlined">${icon}</span>
+            <span>${title}</span>
+        `;
+
+        option.addEventListener('click', () => selectProject(id, title));
+        return option;
+    }
+
+    function selectProject(projectId, projectTitle) {
+        const formData = element.querySelector('form');
+        formData.dataset.projectId = projectId;
+
+        updateProjectDisplay(projectTitle, !!projectId);
+
+        element.querySelectorAll('.project-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+
+        if (projectId) {
+            const selectedOption = element.querySelector(`.project-option[data-id="${projectId}"]`);
+            if (selectedOption) selectedOption.classList.add('selected');
+        }
+
+        closeProjectDropdown();
+        console.log(`Selected project: ${projectTitle} (ID: ${projectId})`);
+    }
+
+    function updateProjectDisplay(title, hasProject) {
+        const projectSelector = element.querySelector('#project-selector');
+        const projectDisplay = element.querySelector('#project-display');
+
+        if (hasProject) {
+            projectDisplay.textContent = title;
+            projectSelector.classList.add('has-project');
+            projectSelector.setAttribute('data-has-project', 'true');
+        } else {
+            projectDisplay.textContent = ''; // Clear the display for no project
+            projectSelector.classList.remove('has-project');
+            projectSelector.setAttribute('data-has-project', 'false');
+        }
+    }
+
+    function toggleProjectDropdown() {
+        const projectDropdown = element.querySelector('#project-dropdown');
+        projectDropdown.classList.toggle('active');
+    }
+
+    function closeProjectDropdown() {
+        const projectDropdown = element.querySelector('#project-dropdown');
+        projectDropdown.classList.remove('active');
     }
 
     function setupPrioritySelector(todo) {
@@ -312,6 +433,7 @@ export function createTodoForm(onSubmit, onCancel) {
             dueDate: selectedDate ? selectedDate.toISOString() : null,
             priority: priority === 'none' ? null : priority,
             completed: element.querySelector('.checkbox') ? element.querySelector('.checkbox').checked : false,
+            projectId: form.dataset.projectId || null,
         };
     }
 
