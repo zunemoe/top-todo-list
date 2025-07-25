@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx webpack serve --open",
-    "start:network": "npx webpack serve --host 0.0.0.0 --port 8080 --allowed-hosts all",
+    "start": "npx webpack serve",
+    "start:network": "npx webpack serve --env network",
     "build": "npx webpack --mode=production",
     "build:dev": "npx webpack --mode=development",
     "deploy": "npm run build && npx gh-pages -d dist",
