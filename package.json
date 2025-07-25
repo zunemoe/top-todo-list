@@ -1,5 +1,5 @@
 {
-  "name": "webpack-template",
+  "name": "todo-list",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,13 +8,13 @@
     "start:network": "npx webpack serve --env network",
     "build": "npx webpack --mode=production",
     "build:dev": "npx webpack --mode=development",
-    "deploy": "npm run build && npx gh-pages -d dist",
-    "deploy:clean": "npm run build && npx gh-pages -d dist -f",
+    "deploy": "npm run build && npx gh-pages -d dist -o origin",
+    "deploy:clean": "npm run build && npx gh-pages -d dist -f -o origin",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "zunemoe:webpack-template"
+    "url": "git@github-zunemoe:zunemoe/top-todo-list.git"
   },
   "keywords": [],
   "author": "",
