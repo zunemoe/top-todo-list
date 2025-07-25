@@ -2,8 +2,10 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = (env, argv) => {
+  const isLocalhost = env && env.localhost;
   const isNetwork = env && env.network;
-  const isProduction = argv.mode === "production";
+  const isProduction = env && env.production;
+
   return {
     mode: isProduction ? "production" : "development",
     entry: "./src/index.js", // Entry point for the application
@@ -18,13 +20,26 @@ module.exports = (env, argv) => {
       host: isNetwork ? "0.0.0.0" : "localhost",
       port: 8080, // Or any open port you prefer
       allowedHosts: "all", // Accept requests from any hostname
+      compress: true, // Enable gzip compression
+      historyApiFallback: true, // Fallback to index.html for SPA routing
+      client: {
+        overlay: {
+          errors: true, // Show errors in the overlay
+          warnings: false, // Do not show warnings in the overlay
+        },
+      },
+      // Ensure proper headers for mobile
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+      },
       watchFiles: ["./src/template.html"], // Keep this line
       static: {
         directory: path.resolve(__dirname, "dist"), // Serve static content from dist
       },
       hot: true,
-      liveReload: true,
-      open: !isNetwork, //Only open browser for localhost
+      liveReload: true,      
     },
     plugins: [
       new HtmlWebpackPlugin({

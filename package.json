@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx webpack serve",
+    "start:localhost": "npx webpack serve --env localhost",
     "start:network": "npx webpack serve --env network",
-    "build": "npx webpack --mode=production",
     "build:dev": "npx webpack --mode=development",
+    "build:prod": "npx webpack --env production --mode=production",
     "deploy": "npm run build && npx gh-pages -d dist -o origin",
     "deploy:clean": "npm run build && npx gh-pages -d dist -f -o origin",
     "test": "echo \"Error: no test specified\" && exit 1"

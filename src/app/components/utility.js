@@ -1,11 +1,22 @@
 import { isToday, isTomorrow, isYesterday, isPast, isFuture, format, isSameYear } from 'date-fns';
 
+export function generateUUID() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+    // Fallback for environments without crypto.randomUUID
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
 /**
  * Format due date with relative words and appropriate styling
  * @param {string|Date} dateInput - The date to format
  * @returns {object} - Object containing formatted text, CSS class, and raw date
  */
-
 export function formatDueDate(dateInput) {
     if (!dateInput) return { text: '', cssClass: '', date: null};
 

@@ -1,3 +1,5 @@
+import { generateUUID } from "./components/utility"
+
 export function createTodo({
     title,
     description = '',
@@ -8,7 +10,7 @@ export function createTodo({
     projectId = null,
 }) {
     return {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         title,
         description,
         dueDate,

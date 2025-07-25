@@ -1,6 +1,8 @@
+import { generateUUID } from "./components/utility"
+
 export function createProject({ title, description }) {
     return {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         title,
         todos: [],
         createdAt: new Date().toISOString(),

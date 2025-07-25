@@ -291,7 +291,7 @@
 .project-icon {
     font-size: var(--font-size-m);
     transition: all 0.3s ease;
-    color: inherit;
+    color: var(--color-gray-dark)
 }
 
 .project-display {
