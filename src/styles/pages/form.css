@@ -75,7 +75,7 @@
     min-height: 1.2em;
     resize: none;
     overflow: hidden;
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-s);
     font-weight: var(--font-weight-light);
     letter-spacing: var(--letter-spacing-tight);
     color: var(--color-gray-dark);
