@@ -15,7 +15,7 @@ export function createTodoForm(onSubmit, onCancel) {
       element.classList.add("todo-form");
       element.innerHTML = `
         <div class="form-handle"></div>
-        <form class="form-content">
+        <form class="form-content" data-project-id="${todo?.projectId || ""}">
             <div class="form-row">                
                 ${
                   todo
@@ -438,7 +438,7 @@ export function createTodoForm(onSubmit, onCancel) {
         const selectedDate = datePicker ?.selectedDates[0];
         const prioritySelector = element.querySelector('.priority-selector');
         const priority = prioritySelector?.getAttribute('data-priority');
-        const form = element.querySelector('form');
+        const form = element.querySelector('.form-content');
         return {
             title: element.querySelector('#todo-title').value.trim(),
             description: element.querySelector('#todo-description').value.trim(),
